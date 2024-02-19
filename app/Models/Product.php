@@ -27,7 +27,8 @@ class Product extends Model
 
     protected $casts = [];
 
-    public function categories(): BelongsToMany {
+    public function categories(): BelongsToMany
+    {
         return $this->belongsToMany(Category::class);
     }
 }

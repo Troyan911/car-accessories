@@ -24,15 +24,18 @@ class Category extends Model
 
     protected $casts = [];
 
-    public function parent() : BelongsTo {
+    public function parent(): BelongsTo
+    {
         return $this->belongsTo(Category::class, 'parent_id');
     }
 
-    public function childs() : HasMany {
+    public function childs(): HasMany
+    {
         return $this->hasMany(Category::class, 'parent_id');
     }
 
-    public function products() :BelongsToMany {
+    public function products(): BelongsToMany
+    {
         return $this->belongsToMany(Product::class);
     }
 }

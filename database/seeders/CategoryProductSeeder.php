@@ -18,9 +18,9 @@ class CategoryProductSeeder extends Seeder
         DB::table('categories')->delete();
         DB::table('products')->delete();
 
-        $createProduct = function(Category $category) {
+        $createProduct = function (Category $category) {
             $category->products()->attach(
-                Product::factory(rand(2,5))->create()->pluck('id')
+                Product::factory(rand(2, 5))->create()->pluck('id')
             );
         };
 
