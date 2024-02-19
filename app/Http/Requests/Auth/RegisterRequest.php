@@ -6,7 +6,6 @@ use App\Models\User;
 use App\Rules\Phone;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rules\Password;
-use Mockery\Generator\StringManipulation\Pass\Pass;
 
 class RegisterRequest extends FormRequest
 {
@@ -29,9 +28,9 @@ class RegisterRequest extends FormRequest
             'name' => ['required', 'string', 'max:50'],
             'surname' => ['required', 'string', 'max:50'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'phone' => ['required', 'string', 'max:15', 'unique:' . User::class], //new Phone],
+            'phone' => ['required', 'string', 'max:15', 'unique:'.User::class], //new Phone],
             'birthdate' => ['required', 'date', 'before_or_equal:-18 years'],
-            'password' => ['required', 'confirmed', Password::defaults()]
+            'password' => ['required', 'confirmed', Password::defaults()],
         ];
     }
 }

@@ -4,7 +4,6 @@ namespace Database\Seeders;
 
 use App\Enums\Roles;
 use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class AdminSeeder extends Seeder
@@ -16,7 +15,7 @@ class AdminSeeder extends Seeder
     {
         $adminEmail = env('ADMIN_EMAIL', 'admin2@admin.com');
 
-        if (!User::where('email', $adminEmail)->exists()) {
+        if (! User::where('email', $adminEmail)->exists()) {
             (User::factory()->withEmail($adminEmail)->create())->syncRoles(Roles::ADMIN->value);
         }
     }
