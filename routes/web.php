@@ -25,10 +25,10 @@ Route::name('admin.')
     ->prefix('admin')
     ->middleware(['role:admin|moderator'])
     ->group(
-    function () {
-        //admin.dashboard
-        Route::get('dashboard', \App\Http\Controllers\Admin\DashboardController::class)->name('dashboard');
-        Route::resource('categories', \App\Http\Controllers\Admin\CategoriesController::class)
-            ->except(['show']);
-    }
-);
+        function () {
+            //admin.dashboard
+            Route::get('dashboard', \App\Http\Controllers\Admin\DashboardController::class)->name('dashboard');
+            Route::resource('categories', \App\Http\Controllers\Admin\CategoriesController::class)
+                ->except(['show']);
+        }
+    );

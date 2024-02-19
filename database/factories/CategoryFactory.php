@@ -24,8 +24,9 @@ class CategoryFactory extends Factory
         return compact('name', 'slug');
     }
 
-    public function withParent(): Factory {
+    public function withParent(): Factory
+    {
         //SELECT * FROM categories
-        return $this->state(fn() => ['parent_id' => Category::all()->random()?->id]);
+        return $this->state(fn () => ['parent_id' => Category::all()->random()?->id]);
     }
 }
