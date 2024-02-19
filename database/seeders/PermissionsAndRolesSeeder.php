@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Enums\Roles;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
@@ -25,12 +24,12 @@ class PermissionsAndRolesSeeder extends Seeder
             }
         }
 
-        if (!Role::where('name', Roles::CUSTOMER->value)->exists()) {
+        if (! Role::where('name', Roles::CUSTOMER->value)->exists()) {
             $role = Role::create(['name' => Roles::CUSTOMER->value]);
             $role->givePermissionTo(array_values($permissions['account']));
         }
 
-        if (!Role::where('name', Roles::MODERATOR->value)->exists()) {
+        if (! Role::where('name', Roles::MODERATOR->value)->exists()) {
 
             $moderatorPermissions = array_merge(
                 array_values($permissions['categories']),
@@ -41,7 +40,7 @@ class PermissionsAndRolesSeeder extends Seeder
             $role->givePermissionTo($moderatorPermissions);
         }
 
-        if (!Role::where('name', Roles::ADMIN->value)->exists()) {
+        if (! Role::where('name', Roles::ADMIN->value)->exists()) {
             $role = Role::create(['name' => Roles::ADMIN->value]);
             $role->givePermissionTo(Permission::all());
         }
