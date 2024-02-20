@@ -2,8 +2,6 @@
 
 namespace Database\Factories;
 
-use App\Enums\Roles;
-use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -27,12 +25,9 @@ class UserFactory extends Factory
     {
         return [
             'name' => fake()->name(),
-            'surname' => fake()->lastName(),
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
-            'phone' => fake()->unique()->e164PhoneNumber(),
-            'birthdate' => fake()->dateTimeBetween('-70 years', '-18 years')->format('Y-m-d'),
-            'password' => static::$password ??= Hash::make('qwerty'),
+            'password' => static::$password ??= Hash::make('password'),
             'remember_token' => Str::random(10),
         ];
     }
@@ -45,17 +40,5 @@ class UserFactory extends Factory
         return $this->state(fn (array $attributes) => [
             'email_verified_at' => null,
         ]);
-    }
-
-    public function configure()
-    {
-        return $this->afterCreating(function (User $user) {
-            $user->assignRole(Roles::CUSTOMER->value);
-        });
-    }
-
-    public function withEmail(string $email)
-    {
-        return $this->state(fn (array $attrs) => ['email' => $email]);
     }
 }
