@@ -66,19 +66,29 @@
             <div class="flex-shrink-0 p-3" style="width: 280px;">
                 <ul class="list-unstyled ps-0">
                     <li class="mb-1">
-                        <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-toggle="collapse" data-bs-target="#dashboard-collapse" aria-expanded="false">
+                        <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-toggle="collapse" data-bs-target="#categoties-collapse" aria-expanded="false">
                             Categories
                         </button>
-                        <div class="collapse" id="dashboard-collapse">
+                        <div class="collapse" id="categoties-collapse">
                             <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                                <li><a href="{{ route('admin.categories.index') }}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">All categories</a></li>
-                                <li><a href="{{ route('admin.categories.create') }}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Create category</a></li>
+                                <li><a href="{{ route('admin.categories.index') }}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">All Categories</a></li>
+                                <li><a href="{{ route('admin.categories.create') }}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Create Category</a></li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li class="mb-1">
+                        <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-toggle="collapse" data-bs-target="#products-collapse" aria-expanded="false">
+                            Products
+                        </button>
+                        <div class="collapse" id="products-collapse">
+                            <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                                <li><a href="{{ route('admin.products.index') }}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">All Products</a></li>
+                                <li><a href="{{ route('admin.products.create') }}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Create Product</a></li>
                             </ul>
                         </div>
                     </li>
                 </ul>
             </div>
-
 
             <div class="container py-5">
                 <div class="row">
@@ -92,5 +102,6 @@
     </div>
     <script src="{{ asset('js/iziToast.js') }}"></script>
     @include('vendor.lara-izitoast.toast')
+@stack('footer.js')
 </body>
 </html>

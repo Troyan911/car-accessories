@@ -19,6 +19,10 @@ Route::get('/', function () {
 
 Auth::routes();
 
+Route::get('test', function () {
+    app(\App\Services\Contract\FileStorageServiceContract::class)->remove('test');
+});
+
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 Route::name('admin.')
@@ -29,6 +33,8 @@ Route::name('admin.')
             //admin.dashboard
             Route::get('dashboard', \App\Http\Controllers\Admin\DashboardController::class)->name('dashboard');
             Route::resource('categories', \App\Http\Controllers\Admin\CategoriesController::class)
+                ->except(['show']);
+            Route::resource('products', \App\Http\Controllers\Admin\ProductsController::class)
                 ->except(['show']);
         }
     );
