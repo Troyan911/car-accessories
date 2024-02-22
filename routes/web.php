@@ -23,7 +23,7 @@ Route::get('test', function () {
     app(\App\Services\Contract\FileStorageServiceContract::class)->remove('test');
 });
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 Route::name('admin.')
     ->prefix('admin')
