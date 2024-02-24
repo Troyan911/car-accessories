@@ -171,7 +171,8 @@
                                         @foreach($product->images as $image)
                                             <div class="mb-2 row flex-row align-items-center images-wrapper-item">
                                                 <div class="col-10 d-flex align-items-center justify-content-center">
-                                                    <img src="{{$image->url}}" style="max-width: 100%; max-height: 200px;"/>
+                                                    <img src="{{$image->url}}"
+                                                         style="max-width: 100%; max-height: 200px;"/>
                                                 </div>
                                                 <div class="col-2">
                                                     <button
@@ -188,7 +189,8 @@
                                                 <input type="file" class="d-none image-input-add">
                                             </div>
                                             <div class="col-2">
-                                                <button class="btn btn-success image-add" data-url="{{route('ajax.products.images.store', $product)}}">
+                                                <button class="btn btn-success image-add"
+                                                        data-url="{{route('ajax.products.images.store', $product)}}">
                                                     Upload<i class="fa-solid fa-plus"></i></button>
                                             </div>
                                         </div>

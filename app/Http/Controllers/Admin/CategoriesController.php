@@ -66,7 +66,9 @@ class CategoriesController extends Controller
         $data = $request->validated();
         $data['slug'] = Str::of($data['name'])->slug()->value();
 
-        $category->updateOrFail($data);
+        if (! $category->updateOrFail($data)) {
+            return redirect()->back()->withInput();
+        }
         notify()->success("Category '$data[name]' was updated!");
 
         return redirect()->route('admin.categories.index');
@@ -84,8 +86,9 @@ class CategoriesController extends Controller
             $category->childs()->update(['parent_id' => null]);
         }
 
-        if(!$category->deleteOrFail()) {
-            return redirect()->route('admin.categories.index');
+        //todo repository
+        if (! $category->deleteOrFail()) {
+            return redirect()->back();
         }
         notify()->success("Category '$name' was deleted!");
 

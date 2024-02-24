@@ -8,7 +8,6 @@ use App\Http\Requests\Products\EditProductRequest;
 use App\Models\Category;
 use App\Models\Product;
 use App\Repositories\Contracts\ProductsRepositoryContract;
-use Illuminate\Support\Str;
 
 class ProductsController extends Controller
 {
@@ -79,6 +78,7 @@ class ProductsController extends Controller
         $product->deleteOrFail();
 
         notify()->success("Product '$title' was deleted!");
+
         return redirect()->route('admin.products.index');
     }
 }

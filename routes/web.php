@@ -28,8 +28,8 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 Route::name('ajax.')->prefix('ajax')->middleware('auth')->group(function () {
     Route::group(['role:admin|moderator'], function () {
         Route::post('products/{product}/images', [\App\Http\Controllers\Ajax\Products\ImagesController::class, 'store'])->name('products.images.store');
-        Route::delete('images/{image}',  \App\Http\Controllers\Ajax\RemoveImagesController::class)->name('images.destroy');
-        Route::get('images/{image}',  \App\Http\Controllers\Ajax\RemoveImagesController::class)->name('images.show');
+        Route::delete('images/{image}', \App\Http\Controllers\Ajax\RemoveImagesController::class)->name('images.destroy');
+        Route::get('images/{image}', \App\Http\Controllers\Ajax\RemoveImagesController::class)->name('images.show');
     });
 });
 

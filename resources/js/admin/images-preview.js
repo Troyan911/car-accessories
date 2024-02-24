@@ -7,9 +7,6 @@ const imageSelectors = {
     thumbnailPreview: '#thumbnail-preview'
 };
 
-//todo add ol load elem if src='#'
-// $(imageSelectors.thumbnailPreview).setAttribute('hidden', 'true');
-
 $(document).ready(
     () => {
         if (window.FileReader) {
@@ -17,7 +14,7 @@ $(document).ready(
             $(imageSelectors.thumbnailInput).change(function () {
                 $(imageSelectors.thumbnailPreview).removeAttr('hidden');
                 const reader = new FileReader();
-                reader.onloadend =  (e) => {
+                reader.onloadend = (e) => {
                     $(imageSelectors.thumbnailPreview).attr('src', e.target.result)
                 };
                 reader.readAsDataURL(this.files[0]);
@@ -33,8 +30,8 @@ $(document).ready(
 
                     while (file = this.files[counter++]) {
                         const reader = new FileReader();
-                        reader.onloadend = (function (){
-                            return function(e) {
+                        reader.onloadend = (function () {
+                            return function (e) {
                                 const img = template.replace('__url__', e.target.result);
                                 $(imageSelectors.imagesWrapper).append(img)
                             }
@@ -42,7 +39,5 @@ $(document).ready(
                         reader.readAsDataURL(file);
                     }
                 });
-
-
         }
     });

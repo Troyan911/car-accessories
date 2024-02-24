@@ -13,7 +13,6 @@ class ProductsRepository implements Contracts\ProductsRepositoryContract
 {
     public function __construct(protected ImageRepositoryContract $imageRepository)
     {
-
     }
 
     public function create(CreateProductRequest $request): bool
@@ -39,9 +38,8 @@ class ProductsRepository implements Contracts\ProductsRepositoryContract
         }
     }
 
-    public function update(Product $product, EditProductRequest $request,): bool
+    public function update(Product $product, EditProductRequest $request): bool
     {
-
         try {
             DB::beginTransaction();
 
@@ -71,11 +69,11 @@ class ProductsRepository implements Contracts\ProductsRepositoryContract
             $product->categories()->detach();
         }
 
-        if (!empty($data['categories'])) {
+        if (! empty($data['categories'])) {
             $product->categories()->attach($data['categories']);
         }
 
-        if (!empty($data['attributes']['images'])) {
+        if (! empty($data['attributes']['images'])) {
             $this->imageRepository->attach(
                 $product,
                 'images',
@@ -95,6 +93,7 @@ class ProductsRepository implements Contracts\ProductsRepositoryContract
     protected function addSlugAndDirToAttributes(array $attributes, bool $setDirectory = false): array
     {
         $slug = Str::of($attributes['title'])->slug()->value();
+
         return array_merge(
             ['slug' => $slug],
             $setDirectory ? ['directory' => $slug] : [],

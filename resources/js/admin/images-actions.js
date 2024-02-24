@@ -41,19 +41,7 @@ $(document).ready(function () {
         }).catch((err) => {
             console.log('err', err)
         })
-
     });
-
-
-    // $(imageSelectors.thumbnailInput).change(function () {
-    //     $(imageSelectors.thumbnailPreview).removeAttr('hidden');
-    //     const reader = new FileReader();
-    //     reader.onloadend =  (e) => {
-    //         $(imageSelectors.thumbnailPreview).attr('src', e.target.result)
-    //     };
-    //     reader.readAsDataURL(this.files[0]);
-    // });
-
 
     $(document).on('click', selectors.remove, function (e) {
         e.preventDefault();

@@ -39,8 +39,8 @@
 
                                         @foreach($categories as $catItem)
                                             <option value="{{$catItem->id}}"
-                                                @if($category->parent_id === $catItem->id)
-                                                    selected
+                                                    @if($category->parent_id === $catItem->id)
+                                                        selected
                                                 @endif>{{$catItem->name}}
                                             </option>
                                         @endforeach

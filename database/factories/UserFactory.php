@@ -64,7 +64,7 @@ class UserFactory extends Factory
     {
         return $this->state(fn (array $attrs) => [
             'password' => $password,
-//            'confirm-password' => $password,
+            //            'confirm-password' => $password,
         ]);
     }
 }

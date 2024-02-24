@@ -13,13 +13,11 @@ class ProductObserver
      */
     public function deleted(Product $product): void
     {
-        if($product->images) {
+        if ($product->images) {
             $product->images->each->delete();
         }
 
         app(FileStorageServiceContract::class)->remove($product->thumbnail);
-        Storage::deleteDirectory("public/" . $product->directory);
-//        Storage::deleteDirectory("public/" . Hash::make($product->id));
-
+        Storage::deleteDirectory('public/'.$product->directory);
     }
 }

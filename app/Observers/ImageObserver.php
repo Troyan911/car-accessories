@@ -14,5 +14,4 @@ class ImageObserver
     {
         app(FileStorageServiceContract::class)->remove($image->path);
     }
-
 }

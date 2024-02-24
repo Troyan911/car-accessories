@@ -26,7 +26,7 @@ class EventServiceProvider extends ServiceProvider
 
     protected $observers = [
         Image::class => ImageObserver::class,
-        Product::class => ProductObserver::class
+        Product::class => ProductObserver::class,
     ];
 
     /**
