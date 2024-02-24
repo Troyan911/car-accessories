@@ -17,8 +17,9 @@ class CategoriesController extends Controller
     {
         $categories = Category::with(['products', 'parent'])
             ->withCount('products')
+            ->orderByDesc('id')
             ->sortable()
-            ->paginate(10);
+            ->paginate(20);
 
         return view('admin.categories.index', compact('categories'));
     }
@@ -83,7 +84,9 @@ class CategoriesController extends Controller
             $category->childs()->update(['parent_id' => null]);
         }
 
-        $category->deleteOrFail();
+        if(!$category->deleteOrFail()) {
+            return redirect()->route('admin.categories.index');
+        }
         notify()->success("Category '$name' was deleted!");
 
         return redirect()->route('admin.categories.index');

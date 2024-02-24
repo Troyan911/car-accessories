@@ -91,4 +91,32 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+
+    //l27
+//    public function addToWish(Product $product, string $type = 'price')
+//    {
+//        $wished = $this->wishes()->find($product);
+//        if ($wished) {
+//            $this->wishes()->updateExistingPivot($wished, [$type => true])
+//        } else {
+//            $this->wishes()->attach([$product->id], [$type => true]);
+//        }
+//    }
+//
+//    function removeFromWish(Product $product, string $type = 'price')
+//    {
+//        $product = $this->wishes->find($product);
+//        $this->wishes()->updateExistingPivot($product, [$type => false]);
+//
+//        if(!$product->pivot()->exists() && !$product->pivot->price ) {
+//            $this->wishes->detach($product);
+//        }
+//    }
+//
+//    public
+//    function isWishedProduct(Product|int $product)
+//    {
+//        return $this->wishes()->find($product)->exists();
+//    }
 }

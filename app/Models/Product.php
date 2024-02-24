@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Kyslik\ColumnSortable\Sortable;
 
@@ -19,6 +20,7 @@ class Product extends Model
 
     protected $fillable = [
         'slug',
+        'directory',
         'title',
         'description',
         'SKU',
@@ -26,7 +28,6 @@ class Product extends Model
         'new_price',
         'quantity',
         'thumbnail',
-        'categories',
     ];
 
     protected $hidden = [];
@@ -72,14 +73,13 @@ class Product extends Model
     {
         $fileStorage = app(FileStorageServiceContract::class);
 
-        //        if($this->thumbnail) {
         if (!empty($this->attributes['thumbnail'])) {
             $fileStorage->remove($this->attributes['thumbnail']);
         }
 
         $this->attributes['thumbnail'] = $fileStorage->upload(
             $image,
-            $this->attributes['slug']
+            $this->attributes['directory']
         );
     }
 }

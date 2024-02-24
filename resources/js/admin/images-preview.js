@@ -7,13 +7,27 @@ const imageSelectors = {
     thumbnailPreview: '#thumbnail-preview'
 };
 
+//todo add ol load elem if src='#'
+// $(imageSelectors.thumbnailPreview).setAttribute('hidden', 'true');
+
 $(document).ready(
     () => {
         if (window.FileReader) {
+
+            $(imageSelectors.thumbnailInput).change(function () {
+                $(imageSelectors.thumbnailPreview).removeAttr('hidden');
+                const reader = new FileReader();
+                reader.onloadend =  (e) => {
+                    $(imageSelectors.thumbnailPreview).attr('src', e.target.result)
+                };
+                reader.readAsDataURL(this.files[0]);
+            });
+
             $(imageSelectors.imagesInput).change(
                 function () {
+
                     let counter = 0, file;
-                    const template = '<div class="mb-4"><img src="__url__" style="width: 100%" /></div>'
+                    const template = '<div class="mb-4"><img src="__url__" style="max-width: 100%; max-height: 200px;" /></div>'
 
                     $(imageSelectors.imagesWrapper).html('');
 
@@ -29,14 +43,6 @@ $(document).ready(
                     }
                 });
 
-            $(imageSelectors.thumbnailInput).change(function () {
-                $(imageSelectors.thumbnailPreview).removeAttr('hidden');
 
-                const reader = new FileReader();
-                reader.onloadend =  (e) => {
-                    $(imageSelectors.thumbnailPreview).attr('src', e.target.result)
-                };
-                reader.readAsDataURL(this.files[0]);
-            });
         }
     });

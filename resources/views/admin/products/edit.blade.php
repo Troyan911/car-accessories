@@ -8,7 +8,8 @@
                     <div class="card-header">{{ __('Edit Product') }}</div>
 
                     <div class="card-body">
-                        <form method="POST" action="{{ route('admin.products.update', $product) }}" enctype="multipart/form-data">
+                        <form method="POST" action="{{ route('admin.products.update', $product) }}"
+                              enctype="multipart/form-data">
                             @method('PUT')
                             @csrf
 
@@ -54,7 +55,7 @@
                                     <select id="categories" name="categories[]" class="form-control" multiple>
                                         @foreach($categories as $category)
                                             <option value="{{$category->id}}"
-                                                    @if(!empty($productCatIds) && in_array($category->id, $productCatIds)) selected @endif >
+                                                    @if(in_array($category->id, $productCategoriesId)) selected @endif >
                                                 {{$category->name}}
                                             </option>
                                         @endforeach
@@ -145,13 +146,13 @@
                                        class="col-md-4 col-form-label text-md-end">{{ __('Thumbnail') }}</label>
 
                                 <div class="col-md-12 d-flex align-items-center justify-content-center">
-                                    <img src="{{$product->thumbnail}}" id="thumbnail-preview" style="width: 50%" hidden="true">
+                                    <img src="{{ $product->thumbnailUrl }}" id="thumbnail-preview"
+                                         style="max-width: 100%; max-height: 200px;">
                                 </div>
                                 <div class="col-md-12">
-{{--                                    <input id="thumbnail" type="file"--}}
-{{--                                           class="form-control @error('thumbnail') is-invalid @enderror"--}}
-{{--                                           name="thumbnail"--}}
-{{--                                           required>--}}
+                                    <input id="thumbnail" type="file"
+                                           class="form-control @error('thumbnail') is-invalid @enderror"
+                                           name="thumbnail">
 
                                     @error('thumbnail')
                                     <span class="invalid-feedback" role="alert">
@@ -166,21 +167,32 @@
                                        class="col-md-4 col-form-label text-md-end">{{ __('Images') }}</label>
 
                                 <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="row images-wrapper"></div>
-                                    </div>
-                                    <div class="col-md-12">
-{{--                                        <input id="images" type="file"--}}
-{{--                                               class="form-control @error('images') is-invalid @enderror"--}}
-{{--                                               name="images[]" multiple>--}}
+                                    <div class="col-md-12 images-wrapper">
+                                        @foreach($product->images as $image)
+                                            <div class="mb-2 row flex-row align-items-center images-wrapper-item">
+                                                <div class="col-10 d-flex align-items-center justify-content-center">
+                                                    <img src="{{$image->url}}" style="max-width: 100%; max-height: 200px;"/>
+                                                </div>
+                                                <div class="col-2">
+                                                    <button
+                                                        class="btn btn-danger image-remove"
+                                                        data-url="{{route('ajax.images.destroy', $image)}}">
+                                                        <i class="fa-solid fa-trash-can"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        @endforeach
 
-                                        @error('images')
-                                        <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                        @enderror
+                                        <div class="mb-2 row flex-row align-items-center images-wrapper-item">
+                                            <div class="col-10 d-flex align-items-center justify-content-center">
+                                                <input type="file" class="d-none image-input-add">
+                                            </div>
+                                            <div class="col-2">
+                                                <button class="btn btn-success image-add" data-url="{{route('ajax.products.images.store', $product)}}">
+                                                    Upload<i class="fa-solid fa-plus"></i></button>
+                                            </div>
+                                        </div>
                                     </div>
-
                                 </div>
                             </div>
 
@@ -200,5 +212,5 @@
 @endsection
 
 @push('footer.js')
-    @vite(['resources/js/admin/images-preview.js'])
+    @vite(['resources/js/admin/images-preview.js','resources/js/admin/images-actions.js'])
 @endpush

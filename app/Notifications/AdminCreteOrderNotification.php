@@ -1,0 +1,43 @@
+<?php
+
+namespace App\Notifications;
+
+use Illuminate\Bus\Queueable;
+use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Notifications\Notification;
+
+class AdminCreteOrderNotification extends Notification
+{
+    use Queueable;
+
+    public function __construct(public Order $order)
+    {
+    }
+
+    public function via(object $notifiable): array
+    {
+        return $notifiable->telegram_id ? ['telegram'] : ['mail'];
+    }
+
+    public function toMail(object $notifiable): MailMessage
+    {
+        logs()->info(__METHOD__);
+
+        return (new MailMessage())
+            ->greeting("Hello, $notifiable->name $notifiable->surname")
+            ->line("There is a new order on the web site");
+    }
+
+    public function toTelegraam(object $notifiable): MailMessage
+    {
+        logs()->info(__METHOD__);
+        $url = route('admin.dashboard');
+
+        return TelegramMessage::create
+            ->to($notifiable->telegram_id)
+            ->content("Hello there!")
+            ->line("There is a new order on the web site")
+            ->line("Check it in admin panel")
+            ->button('Go to dashboard', $url);
+    }
+}

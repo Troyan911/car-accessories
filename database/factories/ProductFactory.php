@@ -25,6 +25,7 @@ class ProductFactory extends Factory
         return [
             'title' => $title,
             'slug' => $slug,
+            'directory' => $slug,
             'description' => fake()->sentence(rand(1, 5), true),
             'SKU' => fake()->unique()->ean13(),
             'price' => $price,

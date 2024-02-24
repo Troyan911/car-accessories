@@ -141,7 +141,7 @@
                                        class="col-md-4 col-form-label text-md-end">{{ __('Thumbnail') }}</label>
 
                                 <div class="col-md-12 d-flex align-items-center justify-content-center">
-                                    <img src="#" id="thumbnail-preview" style="width: 50%" hidden="true">
+                                    <img src="#" id="thumbnail-preview" style="max-width: 100%; max-height: 200px;" hidden="true">
                                 </div>
                                 <div class="col-md-12">
                                     <input id="thumbnail" type="file"
@@ -168,7 +168,9 @@
                                     <div class="col-md-12">
                                         <input id="images" type="file"
                                                class="form-control @error('images') is-invalid @enderror"
-                                               name="images[]" multiple>
+                                               name="images[]"
+                                               style="max-width: 100%; max-height: 200px;"
+                                               multiple>
 
                                         @error('images')
                                         <span class="invalid-feedback" role="alert">
