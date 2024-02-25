@@ -19,7 +19,7 @@
                                 <div class="col-md-6">
                                     <input id="name" type="text"
                                            class="form-control @error('name') is-invalid @enderror" name="name"
-                                           value="{{ old('name') ?? $category->name }}" required autofocus>
+                                           value="{{ old('name') ?? $category->name }}" required>
 
                                     @error('name')
                                     <span class="invalid-feedback" role="alert">
@@ -39,12 +39,17 @@
 
                                         @foreach($categories as $catItem)
                                             <option value="{{$catItem->id}}"
-                                                @if($category->parent_id === $catItem->id)
-                                                    selected
+                                                    @if($category->parent_id === $catItem->id)
+                                                        selected
                                                 @endif>{{$catItem->name}}
                                             </option>
                                         @endforeach
                                     </select>
+                                    @error('parent_id')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                    @enderror
 
                                 </div>
                             </div>

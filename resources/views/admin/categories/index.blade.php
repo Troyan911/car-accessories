@@ -5,7 +5,7 @@
     <table class="table table-striped">
         <thead>
         <tr>
-            <th class="text-black-50" scope="col">@sortablelink('id', '#')</th>
+            <th scope="col">@sortablelink('id', '#')</th>
             <th scope="col">@sortablelink('name', 'Name')</th>
             <th scope="col">@sortablelink('parent_id', 'Parent')</th>
             <th scope="col">@sortablelink('products_count', '# products')</th>

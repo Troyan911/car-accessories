@@ -1,5 +1,5 @@
 
-
+{{--todo--}}
 <form method="POST" action="{{route("admin.categories.destroy", $category)}}">
     @csrf
     @method("DELETE")
