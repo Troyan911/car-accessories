@@ -24,7 +24,7 @@ class ImagesController extends Controller
 
             return response()->json([
                 'url' => $image->url,
-                'imageUrl' => route('ajax.images.show', $image),
+                'imageUrl' => route('ajax.images.destroy', $image),
             ]);
         } catch (\Exception $exception) {
             logs()->error($exception);

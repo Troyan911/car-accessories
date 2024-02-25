@@ -15,6 +15,13 @@ class CreateCategoryRequest extends FormRequest
         return auth()->user()->can(config('permission.permissions.categories.publish'));
     }
 
+    public function messages()
+    {
+        return [
+            'name:min' => '2',
+        ];
+    }
+
     /**
      * Get the validation rules that apply to the request.
      *
