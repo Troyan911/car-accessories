@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Product;
-use Database\Seeders\CategoryProductSeeder;
 
 class HomeController extends Controller
 {

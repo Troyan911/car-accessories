@@ -56,7 +56,8 @@ class Product extends Model
         return $this->morphMany(Image::class, 'imageable');
     }
 
-    public function scopeAvailable(Builder $query): Builder {
+    public function scopeAvailable(Builder $query): Builder
+    {
         return $query->where('quantity', '>', 0);
     }
 
