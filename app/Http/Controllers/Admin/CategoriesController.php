@@ -17,7 +17,6 @@ class CategoriesController extends Controller
     {
         $categories = Category::with(['products', 'parent'])
             ->withCount('products')
-            ->orderByDesc('id')
             ->sortable()
             ->paginate(20);
 
