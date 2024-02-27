@@ -18,7 +18,6 @@ class ProductsController extends Controller
     {
         $products = Product::with(['categories'])
             ->withCount('categories')
-            ->orderByDesc('id')
             ->sortable()
             ->paginate(20);
 

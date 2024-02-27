@@ -13,17 +13,16 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', App\Http\Controllers\HomeController::class)->name('home');
+
+Route::resource('products', \App\Http\Controllers\ProductsController::class)->only(['index', 'show']);
+Route::resource('categories', \App\Http\Controllers\CategoriesController::class)->only(['index', 'show']);
 
 Auth::routes();
 
 Route::get('test', function () {
     app(\App\Services\Contract\FileStorageServiceContract::class)->remove('test');
 });
-
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 Route::name('ajax.')->prefix('ajax')->middleware('auth')->group(function () {
     Route::group(['role:admin|moderator'], function () {
