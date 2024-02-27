@@ -87,4 +87,30 @@ class Product extends Model
             $this->attributes['directory']
         );
     }
+
+    public function finalPrice(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => round(($this->attributes['new_price'] && $this->attributes['new_price'] > 0
+                ? $this->attributes['new_price']
+                : $this->attributes['price']
+            ), 2)
+        );
+    }
+
+    public function discount(): Attribute
+    {
+        return Attribute::make(
+            get: function () {
+                $price = $this->attributes['price'];
+                $newPrice = $this->attributes['new_price'];
+
+                if (empty($newPrice) || $newPrice === 0 || $price == $newPrice) {
+                    return null;
+                } else {
+                    return round(($price - $newPrice) / $price, 2) * 100;
+                }
+            }
+        );
+    }
 }

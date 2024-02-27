@@ -15,6 +15,9 @@
 
     <!-- Scripts -->
     @vite(['resources/scss/app.scss', 'resources/js/app.js'])
+
+    <link href="{{ asset('css/iziToast.css') }}" rel="stylesheet">
+
 </head>
 <body>
     <div id="app">
@@ -24,5 +27,9 @@
             @yield('content')
         </main>
     </div>
+    <script src="{{ asset('js/iziToast.js') }}"></script>
+    @include('vendor.lara-izitoast.toast')
+    @stack('footer.js')
+
 </body>
 </html>
