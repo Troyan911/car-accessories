@@ -10,9 +10,9 @@
                             <button type="button"
                                     data-bs-target="#carouselExampleIndicators"
                                     data-bs-slide-to="{{$key}}"
-                                    class="{{$key === 0 ? 'active' : ' '}}"
+                                    class="{{$key === 0 ? 'active' : ''}}"
                                     aria-current="true"
-                                    aria-label="Slide {{$key+1}}"></button>
+                                    aria-label="Slide {{$key + 1}}"></button>
                         @endforeach
                     </div>
                     <div class="carousel-inner">
