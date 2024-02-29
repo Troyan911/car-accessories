@@ -10,6 +10,7 @@ class PaypalController extends Controller
 {
     public function __invoke(Order $order)
     {
+        $this->authorize('view', $order);
         $order->loadMissing(['user', 'transaction', 'products']);
         $tax = config('cart.tax') / 100;
         Cart::instance('cart')->destroy();
