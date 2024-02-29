@@ -3,7 +3,6 @@
 @section('content')
     <div class="album py-5 bg-body-tertiary">
         <div class="container">
-            @include('categories.parts.categories_block', ['categories' => $categories])
             <div class="row row-cols-1 row-cols-sm-3 row-cols-md-4 g-4">
                 @each('products.parts.card', $products, 'product')
             </div>

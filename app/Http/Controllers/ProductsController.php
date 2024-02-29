@@ -12,29 +12,20 @@ class ProductsController extends Controller
     {
         $products = Product::available()->paginate(12);
 
-        return view('product.index', compact('products'));
+        return view('products.index', compact('products'));
     }
 
     public function show(Product $product)
     {
-        //        $product->load(['images', 'categories']);
         $gallery = collect($product->images()->get()->map(fn ($image) => $image->url));
         $gallery->prepend($product->thumbnailUrl);
-        $rowId = $this->getProductFromCart($product)?->rowId;
+        $rowId = $this->getProductsFromCart($product)?->rowId;
         $isInCart = (bool) $rowId;
 
         return view('products.show', compact('product', 'gallery', 'isInCart', 'rowId'));
     }
 
-    protected function isProductInCart(Product $product): bool
-    {
-        return Cart::instance('cart')
-            ->content()
-            ->where('id', '=', $product->id)
-            ->isNotEmpty();
-    }
-
-    protected function getProductFromCart(Product $product): ?CartItem
+    protected function getProductsFromCart(Product $product): ?CartItem
     {
         return Cart::instance('cart')
             ->content()
