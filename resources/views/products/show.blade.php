@@ -4,8 +4,6 @@
     <div class="container mt-5">
         <div class="row row-cols-1 row-cols-sm-2 g-2 mb-5">
             <div class="col col-sm-4">
-                {{--                <img src="{{$product->thumbnailUrl}}" alt="{{$product->title}}" class="w-100"/>--}}
-
                 <div id="carouselExampleIndicators" class="carousel slide">
                     <div class="carousel-indicators">
                         @foreach($gallery as $key => $image)
@@ -55,8 +53,11 @@
                     <p class="mb-2">Quantity: {{$product->quantity}}</p>
                     <div class="d-flex justify-content-end w-100 align-items-center price-container">
                         <h5 class="me-2 mb-0">{{$product->price}} $</h5>
-                        <button class="btn btn-outline-success w-25">Buy</button>
-
+                        @if(!$isInCart)
+                            @include('cart.parts.add_button', ['product' => $product, 'rowId' => $rowId])
+                        @else
+                            @include('cart.parts.remove_button', ['product' => $product])
+                        @endif
                     </div>
                 </div>
             </div>

@@ -9,7 +9,7 @@ class HomeController extends Controller
 {
     public function __invoke()
     {
-        $categories = Category::take(6)->get();
+        $categories = Category::take(10)->get();
         $products = Product::with(['categories'])
             ->orderByDesc('id')
             ->available()
