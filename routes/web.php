@@ -29,6 +29,11 @@ Route::name('ajax.')->prefix('ajax')->middleware('auth')->group(function () {
         Route::post('products/{product}/images', [\App\Http\Controllers\Ajax\Products\ImagesController::class, 'store'])->name('products.images.store');
         Route::delete('images/{image}', \App\Http\Controllers\Ajax\RemoveImagesController::class)->name('images.destroy');
     });
+
+    Route::prefix('paypal')->name('paypal.')->group(function () {
+        Route::post('order/create', [\App\Http\Controllers\Ajax\Payments\PaypalController::class, 'create'])->name('create');
+        Route::post('order/{orderId}/capture', [\App\Http\Controllers\Ajax\Payments\PaypalController::class, 'capture'])->name('capture');
+    });
 });
 
 Route::name('admin.')
@@ -53,3 +58,8 @@ Route::name('cart.')->prefix('cart')->group(
         Route::post('{product}/count', [\App\Http\Controllers\CartController::class, 'update'])->name('update');
     }
 );
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('checkout', \App\Http\Controllers\CheckoutController::class)->name('checkout');
+    Route::get('orders/{order}/paypal/thank-you', \App\Http\Controllers\Orders\PaypalController::class);
+});
