@@ -61,6 +61,16 @@ class Product extends Model
         return $query->where('quantity', '>', 0);
     }
 
+    public function followers(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            User::class,
+            'wishlists',
+            'product_id',
+            'user_id',
+        )->withPivot(['price', 'exists']);
+    }
+
     public function thumbnailUrl(): Attribute
     {
         return Attribute::make(
@@ -112,5 +122,10 @@ class Product extends Model
                 }
             }
         );
+    }
+
+    public function isExists(): Attribute
+    {
+        return Attribute::get(fn () => $this->attributes['quantity'] > 0);
     }
 }

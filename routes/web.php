@@ -1,6 +1,5 @@
 <?php
 
-use App\Models\Order;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,10 +13,15 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-//Route::get('invoice', function () {
-//    $order = Order::all()->last();
-//    return app(\App\Services\Contract\InvoiceServiceContract::class)->generate($order)->stream();
-//});
+Route::get('test', function () {
+    $user = auth()->user();
+    $product = \App\Models\Product::find(10); //where('id', 10)->get();
+    $wished = $user->wishes()->find($product);
+
+    //    dd($wished->pivot);
+    $user->removeFromWish($product, 'price');
+    //    dd($user->wishes()->where('product_id', $product->id)->wherePivot('price', true)->exists());
+});
 
 Route::get('/', App\Http\Controllers\HomeController::class)->name('home');
 
@@ -25,10 +29,6 @@ Route::resource('products', \App\Http\Controllers\ProductsController::class)->on
 Route::resource('categories', \App\Http\Controllers\CategoriesController::class)->only(['index', 'show']);
 
 Auth::routes();
-
-Route::get('test', function () {
-    app(\App\Services\Contract\FileStorageServiceContract::class)->remove('test');
-});
 
 Route::name('ajax.')->prefix('ajax')->middleware('auth')->group(function () {
     Route::group(['role:admin|moderator'], function () {
@@ -69,4 +69,12 @@ Route::middleware(['auth'])->group(function () {
     Route::get('checkout', \App\Http\Controllers\CheckoutController::class)->name('checkout');
     Route::get('orders/{order}/paypal/thank-you', \App\Http\Controllers\Orders\PaypalController::class);
     Route::get('invoices/{order}', \App\Http\Controllers\InvoiceController::class)->name('invoice');
+    Route::post('wishlist/{product}', [\App\Http\Controllers\WishlistController::class, 'add'])->name('wishlist.add');
+    Route::delete('wishlist/{product}', [\App\Http\Controllers\WishlistController::class, 'remove'])->name('wishlist.remove');
+});
+
+Route::name('callbacks.')->prefix('callbacks')->group(function () {
+    Route::get('telegram', \App\Http\Controllers\Callbacks\JoinTelegramCallback::class)
+        ->middleware(['role:admin'])
+        ->name('telegram');
 });

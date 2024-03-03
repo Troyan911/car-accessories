@@ -1,4 +1,4 @@
-<form action="{{route('cart.remove', $product)}}" method="POST" class="w-25">
+<form action="{{route('cart.remove', $product)}}" method="POST" class="w-100">
     @csrf
     @method('delete')
     <input type="hidden" name="rowId" value="{{$rowId}}">
