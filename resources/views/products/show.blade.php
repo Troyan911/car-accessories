@@ -1,7 +1,9 @@
 @extends('layouts.app')
 
 <?php
+
 use App\Enums\Account\SubscriptionType as SubscriptionType;
+
 ?>
 
 @section('content')
@@ -57,26 +59,23 @@ use App\Enums\Account\SubscriptionType as SubscriptionType;
                     <p class="mb-2">Quantity: {{$product->quantity}}</p>
                     @auth
                         <div class="d-flex justify-content-end w-100 align-items-center">
-                            @if(!auth()->user()->isWishedProduct($product, SubscriptionType::Price))
-                                @include('products.parts.wishlist.price', ['product' => $product])
-                            @else
-                                @include('products.parts.wishlist.price_remove', ['product' => $product])
-                            @endif
-
-                            @if(!$product->isExists)
-                                @if(!auth()->user()->isWishedProduct($product, SubscriptionType::Available))
-                                    @include('products.parts.wishlist.available', ['product' => $product])
-                                @endif
-                            @endif
-                            @if(auth()->user()->isWishedProduct($product, SubscriptionType::Available))
-                                @include('products.parts.wishlist.available_remove', ['product' => $product])
-                            @endif
+                            @include(
+                                'products.parts.wishlist.price', [
+                                    'product' => $product,
+                                    'isFollowed' => auth()->user()->isWishedProduct($product, SubscriptionType::Price),
+                                    'minimized' => false
+                                ])
+                            @include(
+                                'products.parts.wishlist.available', [
+                                    'product' => $product,
+                                    'isFollowed' =>auth()->user()->isWishedProduct($product, SubscriptionType::Available),
+                                    'minimized' => false
+                            ])
                         </div>
                     @endauth
-                    {{--                    @if($product->isExists)--}}
                     <div class="d-flex w-100 price-container">
                         <div class="justify-content-center w-50">
-                            <h5 class="mt-1 ">{{$product->price}} $</h5>
+                            <h5 class="mt-1 ">{{$product->finalPrice}} $</h5>
                         </div>
                         <div class="justify-content-end  w-50">
                             @if(!$isInCart)

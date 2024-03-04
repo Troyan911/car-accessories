@@ -38,7 +38,7 @@
                                 {{--                                <button class="btn btn-outline-secondary" type="button" id="button-addon1">+</button>--}}
                             </form>
                         </td>
-                        <td>{{$row->price}} $</td>
+                        <td>{{$row->finalPrice}} $</td>
                         <td>{{$row->subtotal}} $</td>
                         <td>
                             <form action="{{route('cart.remove')}}" method="POST">

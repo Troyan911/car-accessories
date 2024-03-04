@@ -71,6 +71,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('invoices/{order}', \App\Http\Controllers\InvoiceController::class)->name('invoice');
     Route::post('wishlist/{product}', [\App\Http\Controllers\WishlistController::class, 'add'])->name('wishlist.add');
     Route::delete('wishlist/{product}', [\App\Http\Controllers\WishlistController::class, 'remove'])->name('wishlist.remove');
+    Route::get('account/wishlist', \App\Http\Controllers\Account\WishlistController::class)->name('account.wishlist');
 });
 
 Route::name('callbacks.')->prefix('callbacks')->group(function () {

@@ -68,7 +68,7 @@ class Product extends Model
             'wishlists',
             'product_id',
             'user_id',
-        )->withPivot(['price', 'exists']);
+        )->withPivot(['price', 'available']);
     }
 
     public function thumbnailUrl(): Attribute
@@ -115,7 +115,7 @@ class Product extends Model
                 $price = $this->attributes['price'];
                 $newPrice = $this->attributes['new_price'];
 
-                if (empty($newPrice) || $newPrice === 0 || $price == $newPrice) {
+                if (empty($newPrice) || $newPrice === 0 || $price == $newPrice) { //todo for hide negative discount set $price <= $newPrice
                     return null;
                 } else {
                     return round(($price - $newPrice) / $price, 2) * 100;
