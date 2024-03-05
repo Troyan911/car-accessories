@@ -18,7 +18,7 @@ class CategoriesController extends Controller
         $categories = Category::with(['products', 'parent'])
             ->withCount('products')
             ->sortable()
-            ->paginate(10);
+            ->paginate(20);
 
         return view('admin.categories.index', compact('categories'));
     }
@@ -65,7 +65,9 @@ class CategoriesController extends Controller
         $data = $request->validated();
         $data['slug'] = Str::of($data['name'])->slug()->value();
 
-        $category->updateOrFail($data);
+        if (! $category->updateOrFail($data)) {
+            return redirect()->back()->withInput();
+        }
         notify()->success("Category '$data[name]' was updated!");
 
         return redirect()->route('admin.categories.index');
@@ -83,7 +85,10 @@ class CategoriesController extends Controller
             $category->childs()->update(['parent_id' => null]);
         }
 
-        $category->deleteOrFail();
+        //todo repository
+        if (! $category->deleteOrFail()) {
+            return redirect()->back();
+        }
         notify()->success("Category '$name' was deleted!");
 
         return redirect()->route('admin.categories.index');

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Services\Contract\FileStorageServiceContract;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -19,6 +20,7 @@ class Product extends Model
 
     protected $fillable = [
         'slug',
+        'directory',
         'title',
         'description',
         'SKU',
@@ -26,7 +28,6 @@ class Product extends Model
         'new_price',
         'quantity',
         'thumbnail',
-        'categories',
     ];
 
     protected $hidden = [];
@@ -55,6 +56,21 @@ class Product extends Model
         return $this->morphMany(Image::class, 'imageable');
     }
 
+    public function scopeAvailable(Builder $query): Builder
+    {
+        return $query->where('quantity', '>', 0);
+    }
+
+    public function followers(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            User::class,
+            'wishlists',
+            'product_id',
+            'user_id',
+        )->withPivot(['price', 'available']);
+    }
+
     public function thumbnailUrl(): Attribute
     {
         return Attribute::make(
@@ -72,14 +88,44 @@ class Product extends Model
     {
         $fileStorage = app(FileStorageServiceContract::class);
 
-        //        if($this->thumbnail) {
-        if (!empty($this->attributes['thumbnail'])) {
+        if (! empty($this->attributes['thumbnail'])) {
             $fileStorage->remove($this->attributes['thumbnail']);
         }
 
         $this->attributes['thumbnail'] = $fileStorage->upload(
             $image,
-            $this->attributes['slug']
+            $this->attributes['directory']
         );
+    }
+
+    public function finalPrice(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => round(($this->attributes['new_price'] && $this->attributes['new_price'] > 0
+                ? $this->attributes['new_price']
+                : $this->attributes['price']
+            ), 2)
+        );
+    }
+
+    public function discount(): Attribute
+    {
+        return Attribute::make(
+            get: function () {
+                $price = $this->attributes['price'];
+                $newPrice = $this->attributes['new_price'];
+
+                if (empty($newPrice) || $newPrice === 0 || $price == $newPrice) { //todo for hide negative discount set $price <= $newPrice
+                    return null;
+                } else {
+                    return round(($price - $newPrice) / $price, 2) * 100;
+                }
+            }
+        );
+    }
+
+    public function isExists(): Attribute
+    {
+        return Attribute::get(fn () => $this->attributes['quantity'] > 0);
     }
 }

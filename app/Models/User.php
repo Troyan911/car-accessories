@@ -2,8 +2,11 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Enums\Account\SubscriptionType as SubscriptionType;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -70,6 +73,7 @@ class User extends Authenticatable
         'phone',
         'birthdate',
         'password',
+        'telegram_id',
     ];
 
     /**
@@ -91,4 +95,55 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public function orders(): HasMany
+    {
+        return $this->HasMany(Order::class);
+    }
+
+    public function fullName(): Attribute
+    {
+        return Attribute::make(
+            get: function () {
+                return "$this->name $this->surname";
+            }
+        );
+    }
+
+    public function wishes(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            Product::class,
+            'wishlists',
+            'user_id',
+            'product_id',
+        )->withPivot(['price', 'available']);
+    }
+
+    public function addToWish(Product $product, SubscriptionType $type)
+    {
+        $wished = $this->wishes()->find($product);
+        if ($wished) {
+            $this->wishes()->updateExistingPivot($wished, [$type->value => true]);
+        } else {
+            $this->wishes()->attach($product, [$type->value => true]);
+        }
+    }
+
+    public function removeFromWish(Product $product, SubscriptionType $type)
+    {
+        $this->wishes()->updateExistingPivot($product, [$type->value => false]);
+        $wished = $this->wishes()->find($product);
+
+        if ($wished->pivot->available === 0 && $wished->pivot->price === 0) {
+            $this->wishes()->detach($wished);
+        }
+    }
+
+    public function isWishedProduct(Product|int $product, SubscriptionType $type)
+    {
+        return $this->wishes()
+            ->where('product_id', $product->id)
+            ->wherePivot($type->value, true)->exists();
+    }
 }

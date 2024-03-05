@@ -26,16 +26,17 @@
                 <td>{{$product->title}}</td>
                 <td>{{$product->SKU}}</td>
 
-{{--                <td>--}}
-{{--                    @if($product->categories->exists())--}}
-{{--                        {{$product->categories_count}}--}}
-{{--                <a href="{{route('admin.categories.edit', $category->parent)}}">{{$category->parent->name}}</a>--}}
-{{--                    @else--}}
-{{--                        ---}}
-{{--                    @endif--}}
-{{--                </td>--}}
+{{--                todo categories--}}
+                {{--                <td>--}}
+                {{--                    @if($product->categories->exists())--}}
+                {{--                        {{$product->categories_count}}--}}
+                {{--                <a href="{{route('admin.categories.edit', $category->parent)}}">{{$category->parent->name}}</a>--}}
+                {{--                    @else--}}
+                {{--                        ---}}
+                {{--                    @endif--}}
+                {{--                </td>--}}
 
-                <td>{{$product->price}}</td>
+                <td>{{$product->finalPrice}}</td>
                 <td>{{$product->quantity}}</td>
                 <td>{{$product->created_at}}</td>
                 <td>{{$product->modified_at}}</td>

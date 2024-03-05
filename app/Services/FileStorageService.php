@@ -9,15 +9,15 @@ use Illuminate\Support\Str;
 
 class FileStorageService implements Contract\FileStorageServiceContract
 {
-    public function upload(string|UploadedFile $file, string $additionalPath = ''): string
+    public function upload(string|UploadedFile $file, string $directory = ''): string
     {
         if (is_string($file)) {
             return str_replace('public/storage', '', $file);
         }
 
-        $additionalPath = ! empty($additionalPath) ? $additionalPath.'/' : '';
+        $directory = ! empty($directory) ? $directory.'/' : '';
 
-        $filePath = "public/$additionalPath".Str::random().'_'.time().'.'.$file->getClientOriginalExtension();
+        $filePath = "public/$directory".Str::random().'_'.time().'.'.$file->getClientOriginalExtension();
         Storage::put($filePath, File::get($file));
         Storage::setVisibility($filePath, 'public');
 
@@ -26,7 +26,6 @@ class FileStorageService implements Contract\FileStorageServiceContract
 
     public function remove(string $filePath): void
     {
-        //        dd(__METHOD__);
         Storage::delete($filePath);
     }
 }

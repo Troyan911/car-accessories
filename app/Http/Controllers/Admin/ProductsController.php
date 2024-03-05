@@ -8,7 +8,6 @@ use App\Http\Requests\Products\EditProductRequest;
 use App\Models\Category;
 use App\Models\Product;
 use App\Repositories\Contracts\ProductsRepositoryContract;
-use Illuminate\Support\Str;
 
 class ProductsController extends Controller
 {
@@ -20,7 +19,7 @@ class ProductsController extends Controller
         $products = Product::with(['categories'])
             ->withCount('categories')
             ->sortable()
-            ->paginate(5);
+            ->paginate(20);
 
         return view('admin.products.index', compact('products'));
     }
@@ -43,8 +42,6 @@ class ProductsController extends Controller
         return $repository->create($request)
             ? redirect()->route('admin.products.index')
             : redirect()->back()->withInput();
-
-        //notify()->success("Product '$data[title]' was created!")
     }
 
     /**
@@ -53,24 +50,19 @@ class ProductsController extends Controller
     public function edit(Product $product)
     {
         $categories = Category::all();
-        $productCatIds = $product->categories()->get()->pluck('id')->toArray();
+        $productCategoriesId = $product->categories()->get()->pluck('id')->toArray();
 
-
-        return view('admin.products.edit', compact(['product', 'categories', 'productCatIds']));
+        return view('admin.products.edit', compact(['product', 'categories', 'productCategoriesId']));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(EditProductRequest $request, Product $product)
+    public function update(EditProductRequest $request, Product $product, ProductsRepositoryContract $repository)
     {
-        $data = $request->validated();
-        $data['slug'] = Str::of($data['title'])->slug()->value();
-
-        $product->updateOrFail($data);
-        notify()->success("Product '$data[title]' was updated!");
-
-        return redirect()->route('admin.products.index');
+        return $repository->update($product, $request)
+            ? redirect()->route('admin.products.edit', $product)
+            : redirect()->back()->withInput();
     }
 
     /**
@@ -81,12 +73,9 @@ class ProductsController extends Controller
         $this->middleware('permission:'.config('permission.permissions.delete'));
         $title = $product->title;
 
-
-//        if ($product->pivot()->exists()) {
-//            $product->pivot()->where('product_id', '=', $product->id)->delete();
-//        }
-
+        $product->categories()->detach();
         $product->deleteOrFail();
+
         notify()->success("Product '$title' was deleted!");
 
         return redirect()->route('admin.products.index');

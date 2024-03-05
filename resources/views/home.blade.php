@@ -1,23 +1,12 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">{{ __('Dashboard') }}</div>
-
-                <div class="card-body">
-                    @if (session('status'))
-                        <div class="alert alert-success" role="alert">
-                            {{ session('status') }}
-                        </div>
-                    @endif
-
-                    {{ __('You are logged in!') }}
-                </div>
+    <div class="album py-5 bg-body-tertiary">
+        <div class="container">
+            @include('categories.parts.categories_block', ['categories' => $categories])
+            <div class="row row-cols-1 row-cols-sm-3 row-cols-md-4 g-4">
+                @each('products.parts.card', $products, 'product')
             </div>
         </div>
     </div>
-</div>
 @endsection
