@@ -33,7 +33,7 @@ class PriceDownJob implements ShouldQueue
     {
         logs()->info(__CLASS__.': Price update');
 
-        $this->product->followers()->wherePivot(SubscriptionType::Price->value, true)->chunk(3, function (Collection $users){
+        $this->product->followers()->wherePivot(SubscriptionType::Price->value, true)->chunk(3, function (Collection $users) {
             sleep(10);
             Notification::send(
                 $users,

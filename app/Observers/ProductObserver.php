@@ -2,12 +2,10 @@
 
 namespace App\Observers;
 
-use App\Enums\Account\SubscriptionType;
 use App\Jobs\Products\AvailableJob;
 use App\Jobs\Products\PriceDownJob;
 use App\Models\Product;
 use App\Services\Contract\FileStorageServiceContract;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Storage;
 
 class ProductObserver
