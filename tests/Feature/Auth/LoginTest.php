@@ -4,13 +4,11 @@ namespace Tests\Feature\Auth;
 
 use App\Enums\Roles;
 use App\Models\User;
-use Database\Factories\UserFactory;
 use Database\Seeders\AdminSeeder;
 use Database\Seeders\ModeratorSeeder;
 use Database\Seeders\PermissionsAndRolesSeeder;
 use Database\Seeders\UsersSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class LoginTest extends TestCase
@@ -21,6 +19,8 @@ class LoginTest extends TestCase
     {
         parent::setUp();
         $this->app->make(\Spatie\Permission\PermissionRegistrar::class)->forgetCachedPermissions();
+        $this->errCredsDidntMatch = 'These credentials do not match our records.';
+        $this->youAreLoggedIn = 'You are logged in!';
     }
 
     protected function afterRefreshingDatabase()
@@ -38,14 +38,84 @@ class LoginTest extends TestCase
             'email' => $user['email'],
             'password' => 'qwerty12'
         ]);
-        $this->assertAuthenticatedAs($user);
+        $resp->assertStatus(302)
+            ->assertRedirectToRoute('home');
 
-        $resp = $this->get(route('home'));
+        $resp = $this->assertAuthenticatedAs($user)
+            ->assertDatabaseHas(User::class, ['email' => $user['email']])
+            ->get(route('home'));
+
+//        $resp->dump();
+
         $resp->assertStatus(200)
-//            ->assertStatus(302)
             ->assertViewIs('home')
-            ->assertSeeText('You are logged in!');
+            ->assertSeeText($this->youAreLoggedIn);
+    }
 
-//        $resp = $this->get(route('admin.dashboard'))->assertViewIs('admin.dashboard');
+    public function test_failed_login_incorrect_email(): void
+    {
+        $user = User::factory()->create()->syncRoles(Roles::MODERATOR);
+        $user['email'] .= 12;
+
+        $resp = $this->post(route('login'), [
+            'email' => $user['email'],
+            'password' => 'qwerty12'
+        ])
+            ->assertStatus(302)
+            ->assertRedirectToRoute('login') //todo
+//            ->assertRedirectToRoute('home')
+            ->assertSessionHasErrors([
+                'email' => $this->errCredsDidntMatch
+            ]);
+
+//        $resp->dump();
+//        dd($resp);
+
+        $this->assertDatabaseMissing(User::class, ['email' => $user['email']]);
+    }
+
+    public function test_failed_login_incorrect_password(): void
+    {
+        $user = User::factory()->create()->syncRoles(Roles::MODERATOR);
+
+        $resp = $this->post(route('login'), [
+            'email' => $user['email'],
+            'password' => 'qwerty456'
+        ])
+            ->assertStatus(302)
+//            ->assertRedirectToRoute('login'); //todo why / ?
+//            ->assertRedirectToRoute('home') //todo why / ?
+            ->assertSessionHasErrors([
+                'email' => $this->errCredsDidntMatch
+            ]);
+        $this->assertDatabaseHas(User::class, ['email' => $user['email']]);
+
+
+    }
+
+    /**
+     * userRoles data provider
+     * @return array[]
+     */
+    public static function userRoles(): array
+    {
+        return [
+            [Roles::ADMIN, true],
+            [Roles::MODERATOR, true],
+            [Roles::CUSTOMER, false],
+        ];
+    }
+
+    /**
+     * @test
+     * @dataProvider userRoles
+     */
+    public function test_admin_available_for_roles(Roles $role, bool $isAvailable)
+    {
+        $resp = $this->actingAsRole($role)
+            ->get(route('admin.dashboard'))
+            ->assertStatus($isAvailable ? 200 : 403);
+
+        !$isAvailable ?? $resp->assertViewIs('admin.dashboard');
     }
 }
