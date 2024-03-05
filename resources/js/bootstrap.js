@@ -13,8 +13,8 @@ window.axios = axios;
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
 import $ from 'jquery'
-
 window.$ = $;
+
 /**
  * Echo exposes an expressive API for subscribing to channels and listening
  * for events that are broadcast by Laravel. Echo and event broadcasting
@@ -22,38 +22,19 @@ window.$ = $;
  */
 
 import Echo from 'laravel-echo';
-
 import Pusher from 'pusher-js';
 
-window.Pusher = Pusher;
-
-// window.Echo = new Echo({
-//     broadcaster: 'pusher',
-//     key: import.meta.env.VITE_PUSHER_APP_KEY,
-//     cluster: import.meta.env.VITE_PUSHER_APP_CLUSTER ?? 'mt1',
-//     // wsHost: import.meta.env.VITE_PUSHER_HOST ?? `ws-${import.meta.env.VITE_PUSHER_APP_CLUSTER}.pusher.com`,
-//     // wsPort: import.meta.env.VITE_PUSHER_PORT ?? 80,
-//     // wssPort: import.meta.env.VITE_PUSHER_PORT ?? 443,
-//     forceTLS: false,
-//     // enabledTransports: ['ws', 'wss'],
-//     client: new Pusher(import.meta.env.VITE_PUSHER_APP_KEY, {
-//         broadcaster: 'pusher',
-//         key: import.meta.env.VITE_PUSHER_APP_KEY,
-//         cluster: import.meta.env.VITE_PUSHER_APP_CLUSTER ?? 'mt1',
-//     }),
-// });
+window.Echo = new Echo({
+    broadcaster: 'pusher',
+    key: import.meta.env.VITE_PUSHER_APP_KEY,
+    cluster: import.meta.env.VITE_PUSHER_APP_CLUSTER ?? 'mt1',
+    forceTLS: false,
+});
 
 Pusher.logToConsole = true;
 
-const pusher = new Pusher(import.meta.env.VITE_PUSHER_APP_KEY, {
-    cluster: 'eu'
-});
-
-const channel = pusher.subscribe('my-channel');
-channel.bind('UserNotify', function(data) {
-    alert(JSON.stringify(data));
-});
-// window.Echo.private('my-channel')
-//     .listen('UserNotify', (e) => {
-//         console.log('event', e.message);
-//     });
+window.Echo.private('my-channel')
+    .listen('UserNotify', (e) => {
+        alert(e.message);
+        console.log('event', e.message);
+    });
