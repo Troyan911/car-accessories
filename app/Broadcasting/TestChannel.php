@@ -19,6 +19,6 @@ class TestChannel
      */
     public function join(User $user): array|bool
     {
-        //
+
     }
 }

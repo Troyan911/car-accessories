@@ -2,6 +2,7 @@
 
 namespace App\Events;
 
+use App\Models\User;
 use Illuminate\Broadcasting\InteractsWithBroadcasting;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PrivateChannel;
@@ -11,12 +12,9 @@ use Illuminate\Queue\SerializesModels;
 
 class UserNotify implements ShouldBroadcast
 {
-    use Dispatchable, InteractsWithBroadcasting, InteractsWithSockets, SerializesModels;
+    use Dispatchable, SerializesModels, InteractsWithBroadcasting, InteractsWithSockets;
 
-    /**
-     * Create a new event instance.
-     */
-    public function __construct(public string $message)
+    public function __construct(public User $user, public string $message)
     {
         $this->broadcastVia('pusher');
     }
@@ -28,13 +26,12 @@ class UserNotify implements ShouldBroadcast
      */
     public function broadcastOn(): array
     {
+//        return [
+//            new PrivateChannel('my-channel'),
+//        ];
+
         return [
-            new PrivateChannel('my-channel'),
+            new PrivateChannel('App.Models.User.' . $this->user->id),
         ];
     }
-
-//    public function broadcastAs(): string
-//    {
-//        return 'user-notification';
-//    }
 }

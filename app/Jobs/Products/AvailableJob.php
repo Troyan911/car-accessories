@@ -32,17 +32,10 @@ class AvailableJob implements ShouldQueue
     public function handle(): void
     {
         logs()->info(__CLASS__.': Quantity update');
-        //        Notification::send(
-        //            $this->product->followers()->wherePivot(SubscriptionType::Available->value, true)->get(),
-        //            app()->make(AvailableNotification::class, ['product' => $this->product])
-        //        );
 
-        $this->product->followers()->wherePivot(SubscriptionType::Available->value, true)->chunk(3, function (Collection $users) {
-            sleep(10);
-            Notification::send(
-                $users,
-                app()->make(AvailableNotification::class, ['product' => $this->product])
-            );
-        });
+        Notification::send(
+            $this->product->followers()->wherePivot(SubscriptionType::Available->value, true)->get(),
+            app()->make(AvailableNotification::class, ['product' => $this->product])
+        );
     }
 }

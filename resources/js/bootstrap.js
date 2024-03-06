@@ -23,6 +23,7 @@ window.$ = $;
 
 import Echo from 'laravel-echo';
 import Pusher from 'pusher-js';
+window.Pusher = Pusher;
 
 window.Echo = new Echo({
     broadcaster: 'pusher',
@@ -30,11 +31,18 @@ window.Echo = new Echo({
     cluster: import.meta.env.VITE_PUSHER_APP_CLUSTER ?? 'mt1',
     forceTLS: false,
 });
-
 Pusher.logToConsole = true;
 
-window.Echo.private('my-channel')
-    .listen('UserNotify', (e) => {
-        alert(e.message);
-        console.log('event', e.message);
-    });
+console.log('window.userID', window.userID)
+// console.log(window.Echo.name)
+
+// window.Echo.private(`my-channel`)
+//     .listen('UserNotify', (e) => {
+//         // console.log(e.message)
+//         alert(e.message)
+//     })
+
+window.Echo.private(`App.Models.User.${window.userID}`)
+.listen('UserNotify', (e) => {
+    alert(e.message)
+})
