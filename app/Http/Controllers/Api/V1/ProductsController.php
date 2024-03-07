@@ -4,17 +4,18 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Products\CreateProductRequest;
+use App\Http\Requests\Products\EditProductRequest;
+use App\Http\Resources\Products\ProductResource;
 use App\Http\Resources\Products\ProductsCollection;
 use App\Models\Product;
 use App\Repositories\Contracts\ProductsRepositoryContract;
-use Illuminate\Http\Request;
 
 class ProductsController extends Controller
 {
     public function __construct()
     {
-        $this->authorizeResource(Product::class, 'product');
-
+        //todo fix
+//        $this->authorizeResource(Product::class, 'product');
     }
 
     /**
@@ -46,7 +47,7 @@ class ProductsController extends Controller
      */
     public function store(CreateProductRequest $request, ProductsRepositoryContract $repository)
     {
-        return $repository->create($request);
+        return new ProductResource($repository->create($request));
     }
 
     /**
@@ -54,15 +55,17 @@ class ProductsController extends Controller
      */
     public function show(string $id)
     {
-        //
+        return new ProductResource(Product::find($id));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(EditProductRequest $request, Product $product, ProductsRepositoryContract $repository)
     {
-        //
+        $repository->update($product, $request);
+
+        return new ProductResource(Product::find($product->id));
     }
 
     /**

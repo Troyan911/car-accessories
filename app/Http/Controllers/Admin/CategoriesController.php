@@ -38,8 +38,8 @@ class CategoriesController extends Controller
      */
     public function store(CreateCategoryRequest $request, CategoriesRepositoryContract $repository)
     {
-        if ($repository->create($request)) {
-            notify()->success('Category was created!');
+        if ($item = $repository->create($request)) {
+            notify()->success("Category $item->name was created!");
 
             return redirect()->route('admin.categories.index');
         } else {

@@ -20,8 +20,6 @@ class Products
      */
     public function view(User $user, Product $product): bool
     {
-        dd($this);
-
         return $user->tokenCan('read') || $user->tokenCan('full');
     }
 

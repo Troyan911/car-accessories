@@ -8,7 +8,6 @@ class ApiController extends Controller
 {
     protected function can(string $ability)
     {
-
         $condition = auth()->user()->tokenCan($ability) || auth()->user()->tokenCan('full');
 
         if (! $condition) {

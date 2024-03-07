@@ -16,8 +16,8 @@ class CategoryResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'parent' => new CategoryResource($this->parent),
             'name' => $this->name,
+            'parent' => new CategoryResource($this->parent),
             'url' => url(route('categories.show', $this)),
         ];
     }

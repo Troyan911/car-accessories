@@ -12,7 +12,6 @@ class Categories
      */
     public function viewAny(User $user): bool
     {
-        //        dd($user);
         return $user->tokenCan('read') || $user->tokenCan('full');
     }
 

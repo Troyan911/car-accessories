@@ -13,15 +13,13 @@ class CategoriesRepository implements Contracts\CategoriesRepositoryContract
     {
     }
 
-    public function create(CreateCategoryRequest $request): bool
+    public function create(CreateCategoryRequest $request): Category|false
     {
         try {
             $data = $request->validated();
             $data['slug'] = Str::of($data['name'])->slug()->value();
 
-            Category::create($data);
-
-            return true;
+            return Category::create($data);
         } catch (\Exception $exception) {
             logs()->warning($exception);
 
@@ -52,9 +50,7 @@ class CategoriesRepository implements Contracts\CategoriesRepositoryContract
                 $category->childs()->update(['parent_id' => null]);
             }
 
-            $category->deleteOrFail();
-
-            return true;
+            return $category->deleteOrFail();
         } catch (\Exception $exception) {
             logs()->warning($exception);
 

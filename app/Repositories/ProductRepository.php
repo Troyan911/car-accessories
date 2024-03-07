@@ -15,7 +15,7 @@ class ProductRepository implements Contracts\ProductsRepositoryContract
     {
     }
 
-    public function create(CreateProductRequest $request): bool
+    public function create(CreateProductRequest $request): Product|false
     {
         try {
             DB::beginTransaction();
@@ -27,9 +27,9 @@ class ProductRepository implements Contracts\ProductsRepositoryContract
             $this->setProductData($product, $data);
 
             DB::commit();
-            //            notify()->success("Product '{$data['attributes']['title']}' was created!");
 
-            return true;
+            //            notify()->success("Product '{$data['attributes']['title']}' was created!");
+            return $product;
         } catch (\Exception $exception) {
             DB::rollBack();
             logs()->warning($exception);
@@ -52,8 +52,8 @@ class ProductRepository implements Contracts\ProductsRepositoryContract
             $this->setProductData($product, $data);
 
             DB::commit();
-            //            notify()->success("Product '{$data['attributes']['title']}' was updated!");
 
+            //            notify()->success("Product '{$data['attributes']['title']}' was updated!");
             return true;
         } catch (\Exception $exception) {
             DB::rollBack();
@@ -68,6 +68,7 @@ class ProductRepository implements Contracts\ProductsRepositoryContract
         try {
             $product->categories()->detach();
             $product->followers()->detach();
+
             $product->deleteOrFail();
 
             return true;

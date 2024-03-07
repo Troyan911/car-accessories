@@ -21,8 +21,6 @@ class ProductsController extends Controller
             ->sortable()
             ->paginate(20);
 
-        //        dd(Product::find(3)->categories()->exists());
-
         return view('admin.products.index', compact('products'));
     }
 
@@ -41,8 +39,8 @@ class ProductsController extends Controller
      */
     public function store(CreateProductRequest $request, ProductsRepositoryContract $repository)
     {
-        if ($repository->create($request)) {
-            notify()->success('Product was created!');
+        if ($item = $repository->create($request)) {
+            notify()->success("Product $item->name was created!");
 
             return redirect()->route('admin.products.index');
         } else {
@@ -73,7 +71,7 @@ class ProductsController extends Controller
 
             return redirect()->route('admin.products.edit', $product);
         } else {
-            notify()->warning("Product wasn't updated!");
+            notify()->warning("Product '$product->title' wasn't updated!");
 
             return redirect()->back()->withInput();
         }
@@ -87,8 +85,8 @@ class ProductsController extends Controller
         $title = $product->title;
         $this->middleware('permission:'.config('permission.permissions.delete'));
         $repository->destroy($product)
-        ? notify()->success("Product '$title' was deleted!")
-        : notify()->warning("Product '$title' wasn't deleted!");
+            ? notify()->success("Product '$title' was deleted!")
+            : notify()->warning("Product '$title' wasn't deleted!");
 
         return redirect()->route('admin.products.index');
     }

@@ -8,7 +8,7 @@ use App\Models\Category;
 
 interface CategoriesRepositoryContract
 {
-    public function create(CreateCategoryRequest $request): bool;
+    public function create(CreateCategoryRequest $request): Category|false;
 
     public function update(Category $category, EditCategoryRequest $request): bool;
 

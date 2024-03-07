@@ -14,7 +14,8 @@ class CategoriesController extends Controller
 {
     public function __construct()
     {
-        $this->authorizeResource(Category::class, 'category');
+        //todo fix
+//                $this->authorizeResource(Category::class, 'category');
     }
 
     /**
@@ -43,7 +44,8 @@ class CategoriesController extends Controller
      */
     public function store(CreateCategoryRequest $request, CategoriesRepositoryContract $repository)
     {
-        return $repository->create($request);
+        return new CategoryResource($repository->create($request));
+
     }
 
     /**
@@ -59,7 +61,9 @@ class CategoriesController extends Controller
      */
     public function update(EditCategoryRequest $request, Category $category, CategoriesRepositoryContract $repository)
     {
-        return $repository->update($category, $request);
+        $repository->update($category, $request);
+
+        return new CategoryResource(Category::find($category->id));
     }
 
     /**
