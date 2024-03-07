@@ -5,20 +5,22 @@ namespace App\Notifications;
 use App\Enums\Notification\NotificationType;
 use App\Enums\Order\OrderStatus;
 use App\Models\Order;
+use App\Models\User;
 use App\Services\Contract\InvoiceServiceContract;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use Illuminate\Support\Facades\Storage;
+use NotificationChannels\Telegram\TelegramMessage;
 
-class CustomerOrderNotification extends Notification
+class CustomerCreateOrderNotification extends Notification
 {
     use Queueable;
 
     /**
      * Create a new notification instance.
      */
-    public function __construct(protected InvoiceServiceContract $invoiceService)
+    public function __construct(public User $user, protected InvoiceServiceContract $invoiceService)
     {
         //
     }
@@ -30,10 +32,10 @@ class CustomerOrderNotification extends Notification
      */
     public function via(object $notifiable): array
     {
-        return [
-            NotificationType::Mail->value,
-            NotificationType::Telegram->value
-        ];
+//        logs()->info($notifiable);
+        return $this->user->telegram_id
+            ? [NotificationType::Telegram->value]
+            : [NotificationType::Mail->value];
     }
 
     /**
@@ -51,8 +53,6 @@ class CustomerOrderNotification extends Notification
                 $order->status->name === OrderStatus::Paid,
                 'And successfully paid'
             )
-//            ->line("You can see your order details in invoice clicking on the button below")
-//            ->action('Notification Action', url('/'))
             ->line('You can see your order details inside attached file')
             ->attach(
                 Storage::disk('public')->path($invoice->filename),
@@ -63,11 +63,17 @@ class CustomerOrderNotification extends Notification
             );
     }
 
-    public function toTelegram(object $notifiable): MailMessage
+    public function toTelegram(object $notifiable)
     {
-        return (new MailMessage)
-            ->line('The introduction to the notification.')
-            ->action('Notification Action', url('/'))
-            ->line('Thank you for using our application!');
+        logs()->info(__METHOD__);
+        //todo add order page
+//        $url = route('account.orders');
+
+        return TelegramMessage::create()
+            ->to($this->user->telegram_id)
+//            ->content("Hello $order->name $order->surname")
+            ->line("You've made new order")
+            ->line('Check it in order list');
+//            ->button('Go to order', $url);
     }
 }

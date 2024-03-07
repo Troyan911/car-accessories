@@ -10,17 +10,18 @@ class ProductsController extends Controller
 {
     public function index()
     {
-        $products = Product::available()->paginate(12);
-
+        $products = Product::with(['categories'])
+            ->orderByDesc('id')
+            ->paginate(24);
         return view('products.index', compact('products'));
     }
 
     public function show(Product $product)
     {
-        $gallery = collect($product->images()->get()->map(fn ($image) => $image->url));
+        $gallery = collect($product->images()->get()->map(fn($image) => $image->url));
         $gallery->prepend($product->thumbnailUrl);
         $rowId = $this->getProductsFromCart($product)?->rowId;
-        $isInCart = (bool) $rowId;
+        $isInCart = (bool)$rowId;
 
         return view('products.show', compact('product', 'gallery', 'isInCart', 'rowId'));
     }

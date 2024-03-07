@@ -1,6 +1,7 @@
 <?php
 
 use App\Events\UserNotify;
+use App\Models\Order;
 use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
@@ -14,6 +15,11 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+
+Route::get('event', function() {
+    $order = Order::all()->last();
+    \App\Events\OrderCreated::dispatch($order);
+});
 
 Route::get('test', function () {
     $user = User::find(4);
@@ -55,23 +61,23 @@ Route::name('admin.')
 
 Route::name('cart.')->prefix('cart')->group(
     function () {
-        Route::get('/', [\App\Http\Controllers\CartController::class, 'index'])->name('index');
-        Route::post('{product}', [\App\Http\Controllers\CartController::class, 'add'])->name('add');
-        Route::delete('/', [\App\Http\Controllers\CartController::class, 'remove'])->name('remove');
-        Route::post('{product}/count', [\App\Http\Controllers\CartController::class, 'update'])->name('update');
+        Route::get('/', [\App\Http\Controllers\Orders\CartController::class, 'index'])->name('index');
+        Route::post('{product}', [\App\Http\Controllers\Orders\CartController::class, 'add'])->name('add');
+        Route::delete('/', [\App\Http\Controllers\Orders\CartController::class, 'remove'])->name('remove');
+        Route::post('{product}/count', [\App\Http\Controllers\Orders\CartController::class, 'update'])->name('update');
     }
 );
 
 Route::middleware(['auth'])->group(function () {
-    Route::get('checkout', \App\Http\Controllers\CheckoutController::class)->name('checkout');
-    Route::get('orders/{order}/paypal/thank-you', \App\Http\Controllers\Orders\PaypalController::class);
-    Route::get('invoices/{order}', \App\Http\Controllers\InvoiceController::class)->name('invoice');
+    Route::get('checkout', \App\Http\Controllers\Orders\CheckoutController::class)->name('checkout');
+    Route::get('orders/{order}/paypal/thank-you', \App\Http\Controllers\Orders\PaymentController::class);
+    Route::get('invoices/{order}', \App\Http\Controllers\Orders\InvoiceController::class)->name('invoice');
     Route::post('wishlist/{product}', [\App\Http\Controllers\WishlistController::class, 'add'])->name('wishlist.add');
     Route::delete('wishlist/{product}', [\App\Http\Controllers\WishlistController::class, 'remove'])->name('wishlist.remove');
     Route::get('account/wishlist', \App\Http\Controllers\Account\WishlistController::class)->name('account.wishlist');
 });
 
-Route::name('callbacks.')->prefix('callbacks')->group(function () {
+Route::name('callback.')->prefix('callback')->group(function () {
     Route::get('telegram', \App\Http\Controllers\Callbacks\JoinTeleGramCallback::class)
         ->middleware(['role:admin'])
         ->name('telegram');

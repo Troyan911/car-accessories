@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Listeners;
+namespace App\Listeners\Admin;
 
 use App\Events\OrderCreated;
 use App\Jobs\OrderCreatedNotifyJob;
 
-class OrderCreatedNotificationListener
+class OrderCreatedListener
 {
     /**
      * Create the event listener.
@@ -20,7 +20,7 @@ class OrderCreatedNotificationListener
      */
     public function handle(OrderCreated $event): void
     {
-        logs()->info('run the job');
+        logs()->info('run the job' . OrderCreatedNotifyJob::class);
         OrderCreatedNotifyJob::dispatch($event->order);
         //            ->delay(now()->addSecond(20))
     }
