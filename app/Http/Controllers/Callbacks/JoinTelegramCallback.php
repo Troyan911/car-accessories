@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Azate\LaravelTelegramLoginAuth\TelegramLoginAuth;
 use Illuminate\Http\Request;
 
-class JoinTeleGramCallback extends Controller
+class JoinTelegramCallback extends Controller
 {
     public function __invoke(TelegramLoginAuth $validator, Request $request)
     {
