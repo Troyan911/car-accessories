@@ -9,7 +9,7 @@ use App\Repositories\Contracts\ImageRepositoryContract;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
-class ProductsRepository implements Contracts\ProductsRepositoryContract
+class ProductRepository implements Contracts\ProductsRepositoryContract
 {
     public function __construct(protected ImageRepositoryContract $imageRepository)
     {
@@ -63,17 +63,24 @@ class ProductsRepository implements Contracts\ProductsRepositoryContract
         }
     }
 
+    public function destroy(Product $product): bool
+    {
+        $product->categories()->detach();
+        return $product->deleteOrFail();
+
+    }
+
     protected function setProductData(Product $product, array $data): void
     {
         if ($product->categories()->exists()) {
             $product->categories()->detach();
         }
 
-        if (! empty($data['categories'])) {
+        if (!empty($data['categories'])) {
             $product->categories()->attach($data['categories']);
         }
 
-        if (! empty($data['attributes']['images'])) {
+        if (!empty($data['attributes']['images'])) {
             $this->imageRepository->attach(
                 $product,
                 'images',

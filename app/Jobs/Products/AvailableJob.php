@@ -2,13 +2,12 @@
 
 namespace App\Jobs\Products;
 
-use App\Enums\Account\SubscriptionType;
-use App\Enums\JobQueue;
+use App\Enums\Notification\JobQueue;
+use App\Enums\User\SubscriptionType;
 use App\Models\Product;
 use App\Notifications\Product\AvailableNotification;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;

@@ -12,7 +12,7 @@ use Illuminate\Queue\SerializesModels;
 
 class UserNotify implements ShouldBroadcast
 {
-    use Dispatchable, SerializesModels, InteractsWithBroadcasting, InteractsWithSockets;
+    use Dispatchable, InteractsWithBroadcasting, InteractsWithSockets, SerializesModels;
 
     public function __construct(public User $user, public string $message)
     {
@@ -26,12 +26,12 @@ class UserNotify implements ShouldBroadcast
      */
     public function broadcastOn(): array
     {
-//        return [
-//            new PrivateChannel('my-channel'),
-//        ];
+        //        return [
+        //            new PrivateChannel('my-channel'),
+        //        ];
 
         return [
-            new PrivateChannel('App.Models.User.' . $this->user->id),
+            new PrivateChannel('App.Models.User.'.$this->user->id),
         ];
     }
 }

@@ -30,7 +30,6 @@ class ProductsController extends Controller
     public function create()
     {
         $categories = Category::all();
-
         return view('admin.products.create', compact('categories'));
     }
 
@@ -68,15 +67,13 @@ class ProductsController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Product $product)
+    public function destroy(Product $product, ProductsRepositoryContract $repository)
     {
-        $this->middleware('permission:'.config('permission.permissions.delete'));
         $title = $product->title;
-
-        $product->categories()->detach();
-        $product->deleteOrFail();
-
-        notify()->success("Product '$title' was deleted!");
+        $this->middleware('permission:' . config('permission.permissions.delete'));
+        $repository->destroy($product)
+            ? notify()->success("Product '$title' was deleted!")
+            : notify()->warning("Product '$title' wasn't deleted!");
 
         return redirect()->route('admin.products.index');
     }

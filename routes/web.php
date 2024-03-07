@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('test', function () {
     $user = User::find(4);
-    UserNotify::dispatch($user, 'test message for user ' . $user->email);
+    UserNotify::dispatch($user, 'test message for user '.$user->email);
 });
 
 Route::get('/', App\Http\Controllers\HomeController::class)->name('home');

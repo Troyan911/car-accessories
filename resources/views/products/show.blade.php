@@ -2,7 +2,7 @@
 
 <?php
 
-use App\Enums\Account\SubscriptionType as SubscriptionType;
+use App\Enums\User\SubscriptionType as SubscriptionType;
 
 ?>
 

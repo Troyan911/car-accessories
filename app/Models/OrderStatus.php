@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Enums\OrderStatus as Status;
+use App\Enums\Order\OrderStatus as Status;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -45,7 +45,7 @@ class OrderStatus extends Model
         return $this->hasMany(Order::class);
     }
 
-    protected function statusQuery(Builder $query, \App\Enums\OrderStatus $status): Builder
+    protected function statusQuery(Builder $query, \App\Enums\Order\OrderStatus $status): Builder
     {
         return $query->where('name', $status->value);
     }

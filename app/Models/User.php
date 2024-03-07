@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Enums\Account\SubscriptionType as SubscriptionType;
+use App\Enums\User\SubscriptionType as SubscriptionType;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
