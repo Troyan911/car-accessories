@@ -5,7 +5,6 @@ namespace App\Enums\Notification;
 enum NotificationType: string
 {
     case Telegram = 'telegram';
-
     case Mail = 'mail';
     case Sms = 'sms';
 

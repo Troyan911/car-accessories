@@ -15,7 +15,7 @@ class CategoriesController extends Controller
     public function __construct()
     {
         //todo fix
-//                $this->authorizeResource(Category::class, 'category');
+        //                $this->authorizeResource(Category::class, 'category');
     }
 
     /**

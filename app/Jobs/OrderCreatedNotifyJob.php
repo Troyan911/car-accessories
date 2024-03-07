@@ -32,19 +32,19 @@ class OrderCreatedNotifyJob implements ShouldQueue
      */
     public function handle(): void
     {
-        logs()->info(__CLASS__ . ': Notify customer');
+        logs()->info(__CLASS__.': Notify customer');
         $customer = User::find($this->order->user_id);
 
-//        Notification::send(
-//            $customer,
-//            app()->make(CustomerCreateOrderNotification::class, ['order' => $this->order])
-//        );
+        //        Notification::send(
+        //            $customer,
+        //            app()->make(CustomerCreateOrderNotification::class, ['order' => $this->order])
+        //        );
 
         $this->order->notify(
             app()->make(CustomerCreateOrderNotification::class, ['user' => $customer])
         );
 
-        logs()->info(__CLASS__ . ': Notify admins');
+        logs()->info(__CLASS__.': Notify admins');
         Notification::send(
             User::role(Roles::ADMIN->value)->get(),
             app()->make(AdminCreteOrderNotification::class, ['order' => $this->order])

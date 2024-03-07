@@ -32,7 +32,7 @@ class CustomerCreateOrderNotification extends Notification
      */
     public function via(object $notifiable): array
     {
-//        logs()->info($notifiable);
+        //        logs()->info($notifiable);
         return $this->user->telegram_id
             ? [NotificationType::Telegram->value]
             : [NotificationType::Mail->value];
@@ -67,13 +67,13 @@ class CustomerCreateOrderNotification extends Notification
     {
         logs()->info(__METHOD__);
         //todo add order page
-//        $url = route('account.orders');
+        //        $url = route('account.orders');
 
         return TelegramMessage::create()
             ->to($this->user->telegram_id)
 //            ->content("Hello $order->name $order->surname")
             ->line("You've made new order")
             ->line('Check it in order list');
-//            ->button('Go to order', $url);
+        //            ->button('Go to order', $url);
     }
 }

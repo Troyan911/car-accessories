@@ -20,7 +20,7 @@ class OrderCreatedListener
      */
     public function handle(OrderCreated $event): void
     {
-        logs()->info('run the job' . OrderCreatedNotifyJob::class);
+        logs()->info('run the job'.OrderCreatedNotifyJob::class);
         OrderCreatedNotifyJob::dispatch($event->order);
         //            ->delay(now()->addSecond(20))
     }

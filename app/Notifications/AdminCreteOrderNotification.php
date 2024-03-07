@@ -20,7 +20,7 @@ class AdminCreteOrderNotification extends Notification
 
     public function via(object $notifiable): array
     {
-//        logs()->info($notifiable);
+        //        logs()->info($notifiable);
         return $notifiable->telegram_id
             ? [NotificationType::Telegram->value]
             : [NotificationType::Mail->value];
@@ -29,6 +29,7 @@ class AdminCreteOrderNotification extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         logs()->info(__METHOD__);
+
         return (new MailMessage)
             ->greeting("Hello $notifiable->name $notifiable->surname")
             ->line('There is a new order on the web site');

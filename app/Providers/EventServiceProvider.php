@@ -47,9 +47,9 @@ class EventServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-//        Event::listen(
-//            OrderCreated::class
-//        );
+        //        Event::listen(
+        //            OrderCreated::class
+        //        );
     }
 
     /**

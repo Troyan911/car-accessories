@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('event', function() {
+Route::get('event', function () {
     $order = Order::all()->last();
     \App\Events\OrderCreated::dispatch($order);
 });
