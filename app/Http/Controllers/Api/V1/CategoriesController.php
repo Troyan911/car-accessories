@@ -34,7 +34,7 @@ class CategoriesController extends Controller
                     'to' => $categories->lastPage(),
                     'path' => $categories->path(),
                     'next' => $categories->nextPageUrl(),
-                ]
+                ],
             ]);
     }
 

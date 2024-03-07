@@ -5,11 +5,7 @@ namespace App\Repositories;
 use App\Http\Requests\Categories\CreateCategoryRequest;
 use App\Http\Requests\Categories\EditCategoryRequest;
 use App\Models\Category;
-use App\Models\Product;
-use App\Repositories\Contracts\ImageRepositoryContract;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
-use phpDocumentor\Reflection\Types\True_;
 
 class CategoriesRepository implements Contracts\CategoriesRepositoryContract
 {
@@ -24,27 +20,45 @@ class CategoriesRepository implements Contracts\CategoriesRepositoryContract
             $data['slug'] = Str::of($data['name'])->slug()->value();
 
             Category::create($data);
+
             return true;
         } catch (\Exception $exception) {
             logs()->warning($exception);
+
             return false;
         }
     }
 
     public function update(Category $category, EditCategoryRequest $request): bool
     {
-        $data = $request->validated();
-        $data['slug'] = Str::of($data['name'])->slug()->value();
+        try {
+            $data = $request->validated();
+            $data['slug'] = Str::of($data['name'])->slug()->value();
 
-        return $category->updateOrFail($data);
+            $category->updateOrFail($data);
+
+            return true;
+        } catch (\Exception $exception) {
+            logs()->warning($exception);
+
+            return false;
+        }
     }
 
     public function destroy(Category $category): bool
     {
-        if ($category->childs()->exists()) {
-            $category->childs()->update(['parent_id' => null]);
-        }
+        try {
+            if ($category->childs()->exists()) {
+                $category->childs()->update(['parent_id' => null]);
+            }
 
-        return $category->deleteOrFail();
+            $category->deleteOrFail();
+
+            return true;
+        } catch (\Exception $exception) {
+            logs()->warning($exception);
+
+            return false;
+        }
     }
 }

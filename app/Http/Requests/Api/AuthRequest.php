@@ -16,14 +16,13 @@ class AuthRequest extends FormRequest
         return true;
     }
 
-
     //todo change one message
     public function messages()
     {
         return [
-//            'error' => 'Invalid Credentials',
+            //            'error' => 'Invalid Credentials',
             'failed' => 'These credentials do not match our records.',
-            'throttle' => 'Too many login attempts. Please try again in :seconds seconds.'
+            'throttle' => 'Too many login attempts. Please try again in :seconds seconds.',
         ];
     }
 
@@ -36,7 +35,7 @@ class AuthRequest extends FormRequest
     {
         return
             [
-                'email' => ['required', 'string', 'email', 'max:255', 'exists:' . User::class . ',email'],
+                'email' => ['required', 'string', 'email', 'max:255', 'exists:'.User::class.',email'],
                 'password' => ['required', 'string', Password::defaults()],
             ];
     }

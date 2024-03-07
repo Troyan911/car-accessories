@@ -8,12 +8,11 @@ use App\Http\Requests\Api\AuthRequest;
 
 class AuthController extends Controller
 {
-
     public function __invoke(AuthRequest $request)
     {
         $data = $request->validated();
 
-        if (!auth()->attempt($data)) {
+        if (! auth()->attempt($data)) {
             return response()->json([
                 'status' => 'error',
                 'message' => 'Invalid Credentials',

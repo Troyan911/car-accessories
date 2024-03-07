@@ -7,7 +7,6 @@ use App\Http\Requests\Categories\CreateCategoryRequest;
 use App\Http\Requests\Categories\EditCategoryRequest;
 use App\Models\Category;
 use App\Repositories\Contracts\CategoriesRepositoryContract;
-use Illuminate\Support\Str;
 
 class CategoriesController extends Controller
 {
@@ -30,6 +29,7 @@ class CategoriesController extends Controller
     public function create()
     {
         $categories = Category::all();
+
         return view('admin.categories.create', compact('categories'));
     }
 
@@ -38,12 +38,13 @@ class CategoriesController extends Controller
      */
     public function store(CreateCategoryRequest $request, CategoriesRepositoryContract $repository)
     {
-        if($repository->create($request)) {
-            notify()->success("Category was created!");
+        if ($repository->create($request)) {
+            notify()->success('Category was created!');
+
             return redirect()->route('admin.categories.index');
-        }
-        else {
+        } else {
             notify()->warning("Category wasn't created!");
+
             return redirect()->back()->withInput();
         }
     }
@@ -54,6 +55,7 @@ class CategoriesController extends Controller
     public function edit(Category $category)
     {
         $categories = Category::where('id', '!=', $category->id)->get();
+
         return view('admin.categories.edit', compact(['category', 'categories']));
     }
 
@@ -62,12 +64,13 @@ class CategoriesController extends Controller
      */
     public function update(EditCategoryRequest $request, Category $category, CategoriesRepositoryContract $repository)
     {
-        if($repository->update($category, $request)) {
+        if ($repository->update($category, $request)) {
             notify()->success("Category '$category->name' was updated!");
-            return redirect()->route('admin.categories.index', $category);
-        }
-        else {
+
+            return redirect()->route('admin.categories.index');
+        } else {
             notify()->warning("Category '$category->name' wasn't updated!");
+
             return redirect()->back()->withInput();
         }
     }
@@ -78,7 +81,7 @@ class CategoriesController extends Controller
     public function destroy(Category $category, CategoriesRepositoryContract $repository)
     {
         $name = $category->name;
-        $this->middleware('permission:' . config('permission.permissions.delete'));
+        $this->middleware('permission:'.config('permission.permissions.delete'));
         $repository->destroy($category)
             ? notify()->success("Category '$name' was deleted!")
             : notify()->warning("Category '$name' wasn't deleted!");

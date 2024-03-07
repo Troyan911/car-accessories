@@ -27,7 +27,7 @@ class ProductRepository implements Contracts\ProductsRepositoryContract
             $this->setProductData($product, $data);
 
             DB::commit();
-            notify()->success("Product '{$data['attributes']['title']}' was created!");
+            //            notify()->success("Product '{$data['attributes']['title']}' was created!");
 
             return true;
         } catch (\Exception $exception) {
@@ -52,7 +52,7 @@ class ProductRepository implements Contracts\ProductsRepositoryContract
             $this->setProductData($product, $data);
 
             DB::commit();
-            notify()->success("Product '{$data['attributes']['title']}' was updated!");
+            //            notify()->success("Product '{$data['attributes']['title']}' was updated!");
 
             return true;
         } catch (\Exception $exception) {
@@ -65,9 +65,17 @@ class ProductRepository implements Contracts\ProductsRepositoryContract
 
     public function destroy(Product $product): bool
     {
-        $product->categories()->detach();
-        return $product->deleteOrFail();
+        try {
+            $product->categories()->detach();
+            $product->followers()->detach();
+            $product->deleteOrFail();
 
+            return true;
+        } catch (\Exception $exception) {
+            logs()->warning($exception);
+
+            return false;
+        }
     }
 
     protected function setProductData(Product $product, array $data): void
@@ -76,11 +84,11 @@ class ProductRepository implements Contracts\ProductsRepositoryContract
             $product->categories()->detach();
         }
 
-        if (!empty($data['categories'])) {
+        if (! empty($data['categories'])) {
             $product->categories()->attach($data['categories']);
         }
 
-        if (!empty($data['attributes']['images'])) {
+        if (! empty($data['attributes']['images'])) {
             $this->imageRepository->attach(
                 $product,
                 'images',

@@ -21,6 +21,8 @@ class ProductsController extends Controller
             ->sortable()
             ->paginate(20);
 
+        //        dd(Product::find(3)->categories()->exists());
+
         return view('admin.products.index', compact('products'));
     }
 
@@ -30,6 +32,7 @@ class ProductsController extends Controller
     public function create()
     {
         $categories = Category::all();
+
         return view('admin.products.create', compact('categories'));
     }
 
@@ -38,9 +41,15 @@ class ProductsController extends Controller
      */
     public function store(CreateProductRequest $request, ProductsRepositoryContract $repository)
     {
-        return $repository->create($request)
-            ? redirect()->route('admin.products.index')
-            : redirect()->back()->withInput();
+        if ($repository->create($request)) {
+            notify()->success('Product was created!');
+
+            return redirect()->route('admin.products.index');
+        } else {
+            notify()->warning("Product wasn't created!");
+
+            return redirect()->back()->withInput();
+        }
     }
 
     /**
@@ -59,9 +68,15 @@ class ProductsController extends Controller
      */
     public function update(EditProductRequest $request, Product $product, ProductsRepositoryContract $repository)
     {
-        return $repository->update($product, $request)
-            ? redirect()->route('admin.products.edit', $product)
-            : redirect()->back()->withInput();
+        if ($repository->update($product, $request)) {
+            notify()->success("Product '$product->title' was updated!");
+
+            return redirect()->route('admin.products.edit', $product);
+        } else {
+            notify()->warning("Product wasn't updated!");
+
+            return redirect()->back()->withInput();
+        }
     }
 
     /**
@@ -70,10 +85,10 @@ class ProductsController extends Controller
     public function destroy(Product $product, ProductsRepositoryContract $repository)
     {
         $title = $product->title;
-        $this->middleware('permission:' . config('permission.permissions.delete'));
+        $this->middleware('permission:'.config('permission.permissions.delete'));
         $repository->destroy($product)
-            ? notify()->success("Product '$title' was deleted!")
-            : notify()->warning("Product '$title' wasn't deleted!");
+        ? notify()->success("Product '$title' was deleted!")
+        : notify()->warning("Product '$title' wasn't deleted!");
 
         return redirect()->route('admin.products.index');
     }

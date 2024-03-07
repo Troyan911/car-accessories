@@ -22,7 +22,7 @@ class ProductsController extends Controller
      */
     public function index()
     {
-//        $this->authorize('viewAny', Product::class);
+        //        $this->authorize('viewAny', Product::class);
         $products = Product::with(['categories', 'images'])
             ->orderByDesc('id')
             ->paginate(5);
@@ -37,7 +37,7 @@ class ProductsController extends Controller
                         'to' => $products->lastPage(),
                         'path' => $products->path(),
                         'next' => $products->nextPageUrl(),
-                    ]
+                    ],
                 ]);
     }
 
