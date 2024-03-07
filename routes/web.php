@@ -72,7 +72,7 @@ Route::middleware(['auth'])->group(function () {
 });
 
 Route::name('callbacks.')->prefix('callbacks')->group(function () {
-    Route::get('telegram', \App\Http\Controllers\Callbacks\JoinTelegramCallback::class)
+    Route::get('telegram', \App\Http\Controllers\Callbacks\JoinTeleGramCallback::class)
         ->middleware(['role:admin'])
         ->name('telegram');
 });

@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Azate\LaravelTelegramLoginAuth\TelegramLoginAuth;
 use Illuminate\Http\Request;
 
-class JoinTelegramCallback extends Controller
+class JoinTeleGramCallback extends Controller
 {
     public function __invoke(TelegramLoginAuth $validator, Request $request)
     {
@@ -14,7 +14,6 @@ class JoinTelegramCallback extends Controller
         auth()->user()->update([
             'telegram_id' => $data->getId(),
         ]);
-
         notify()->success('You were added to our telegram bot bot', position: 'topRight');
 
         return redirect()->route('admin.dashboard');

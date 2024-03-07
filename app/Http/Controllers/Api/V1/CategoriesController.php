@@ -45,7 +45,6 @@ class CategoriesController extends Controller
     public function store(CreateCategoryRequest $request, CategoriesRepositoryContract $repository)
     {
         return new CategoryResource($repository->create($request));
-
     }
 
     /**

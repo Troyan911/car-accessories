@@ -19,7 +19,7 @@ class AdminCreteOrderNotification extends Notification
 
     public function via(object $notifiable): array
     {
-        return $notifiable->telegram_id ? ['telegram'] : ['mail'];
+        return !$notifiable->telegram_id ?  ['mail'] : ['telegram'];
     }
 
     public function toMail(object $notifiable): MailMessage

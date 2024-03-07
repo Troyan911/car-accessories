@@ -32,7 +32,7 @@ class CustomerOrderNotification extends Notification
     {
         return [
             NotificationType::Mail->value,
-            //            NotificationType::Telegram->value
+            NotificationType::Telegram->value
         ];
     }
 
