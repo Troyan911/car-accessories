@@ -80,8 +80,8 @@ class CategoriesController extends Controller
      */
     public function destroy(Category $category, CategoriesRepositoryContract $repository)
     {
-        $name = $category->name;
         $this->middleware('permission:'.config('permission.permissions.delete'));
+        $name = $category->name;
         $repository->destroy($category)
             ? notify()->success("Category '$name' was deleted!")
             : notify()->warning("Category '$name' wasn't deleted!");

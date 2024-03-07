@@ -82,8 +82,8 @@ class ProductsController extends Controller
      */
     public function destroy(Product $product, ProductsRepositoryContract $repository)
     {
-        $title = $product->title;
         $this->middleware('permission:'.config('permission.permissions.delete'));
+        $title = $product->title;
         $repository->destroy($product)
             ? notify()->success("Product '$title' was deleted!")
             : notify()->warning("Product '$title' wasn't deleted!");
