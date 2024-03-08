@@ -17,7 +17,7 @@ class OrderStatus extends Model
     public $timestamps = false;
 
     protected $casts = [
-        'name' => \App\Enums\OrderStatus::class,
+        'name' => Status::class,
     ];
 
     public function scopeInProgress(Builder $query): Builder

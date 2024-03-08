@@ -152,7 +152,7 @@
                                 <td>
                                     {{$row->qty}}
                                 </td>
-                                <td>{{$row->price}} $</td>
+                                <td>{{$row->finalPrice}} $</td>
                                 <td>{{$row->subtotal}} $</td>
                                 </tr>
                             @endforeach

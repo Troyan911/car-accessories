@@ -61,6 +61,16 @@ class Product extends Model
         return $query->where('quantity', '>', 0);
     }
 
+    public function followers(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            User::class,
+            'wishlists',
+            'product_id',
+            'user_id',
+        )->withPivot(['price', 'available']);
+    }
+
     public function thumbnailUrl(): Attribute
     {
         return Attribute::make(
@@ -105,12 +115,17 @@ class Product extends Model
                 $price = $this->attributes['price'];
                 $newPrice = $this->attributes['new_price'];
 
-                if (empty($newPrice) || $newPrice === 0 || $price == $newPrice) {
+                if (empty($newPrice) || $newPrice === 0 || $price == $newPrice) { //todo for hide negative discount set $price <= $newPrice
                     return null;
                 } else {
                     return round(($price - $newPrice) / $price, 2) * 100;
                 }
             }
         );
+    }
+
+    public function isExists(): Attribute
+    {
+        return Attribute::get(fn () => $this->attributes['quantity'] > 0);
     }
 }

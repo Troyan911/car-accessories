@@ -90,6 +90,11 @@
                         </tbody>
                     </table>
                 </div>
+                <div class="row">
+                    <div class="col-12 text-center">
+                        <a class="btn btn-success" href="{{route('invoice', $order)}}" target="_blank">Get invoice file</a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
