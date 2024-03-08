@@ -36,7 +36,7 @@
                 {{--                    @endif--}}
                 {{--                </td>--}}
 
-                <td>{{$product->price}}</td>
+                <td>{{$product->finalPrice}}</td>
                 <td>{{$product->quantity}}</td>
                 <td>{{$product->created_at}}</td>
                 <td>{{$product->modified_at}}</td>
