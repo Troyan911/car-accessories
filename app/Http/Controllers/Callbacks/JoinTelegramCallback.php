@@ -14,7 +14,6 @@ class JoinTelegramCallback extends Controller
         auth()->user()->update([
             'telegram_id' => $data->getId(),
         ]);
-
         notify()->success('You were added to our telegram bot bot', position: 'topRight');
 
         return redirect()->route('admin.dashboard');

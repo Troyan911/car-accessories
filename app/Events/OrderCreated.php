@@ -16,7 +16,7 @@ class OrderCreated
      */
     public function __construct(public Order $order)
     {
-        //        dd($this->order);
+        //                dd($this->order);
     }
 
     /**

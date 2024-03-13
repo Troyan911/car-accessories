@@ -7,7 +7,7 @@ use App\Enums\User\Roles;
 use App\Models\Order;
 use App\Models\User;
 use App\Notifications\AdminCreteOrderNotification;
-use App\Notifications\CustomerOrderNotification;
+use App\Notifications\CustomerCreateOrderNotification;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -33,7 +33,17 @@ class OrderCreatedNotifyJob implements ShouldQueue
     public function handle(): void
     {
         logs()->info(__CLASS__.': Notify customer');
-        $this->order->notify(app()->make(CustomerOrderNotification::class));
+        $customer = User::find($this->order->user_id);
+
+        //        Notification::send(
+        //            $customer,
+        //            app()->make(CustomerCreateOrderNotification::class, ['order' => $this->order])
+        //        );
+
+        $this->order->notify(
+            app()->make(CustomerCreateOrderNotification::class, ['user' => $customer])
+        );
+
         logs()->info(__CLASS__.': Notify admins');
         Notification::send(
             User::role(Roles::ADMIN->value)->get(),
