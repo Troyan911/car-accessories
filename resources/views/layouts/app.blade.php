@@ -17,6 +17,13 @@
     @vite(['resources/scss/app.scss', 'resources/js/app.js'])
 
     <link href="{{ asset('css/iziToast.css') }}" rel="stylesheet">
+{{--    <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>--}}
+
+    @auth
+        <script>
+            window.userID = {{ auth()->id() }}
+        </script>
+    @endauth
 
 </head>
 <body>

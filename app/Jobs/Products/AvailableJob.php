@@ -2,13 +2,12 @@
 
 namespace App\Jobs\Products;
 
-use App\Enums\Account\SubscriptionType;
-use App\Enums\JobQueue;
+use App\Enums\Notification\JobQueue;
+use App\Enums\User\SubscriptionType;
 use App\Models\Product;
 use App\Notifications\Product\AvailableNotification;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
@@ -32,17 +31,10 @@ class AvailableJob implements ShouldQueue
     public function handle(): void
     {
         logs()->info(__CLASS__.': Quantity update');
-        //        Notification::send(
-        //            $this->product->followers()->wherePivot(SubscriptionType::Available->value, true)->get(),
-        //            app()->make(AvailableNotification::class, ['product' => $this->product])
-        //        );
 
-        $this->product->followers()->wherePivot(SubscriptionType::Available->value, true)->chunk(3, function (Collection $users) {
-            sleep(10);
-            Notification::send(
-                $users,
-                app()->make(AvailableNotification::class, ['product' => $this->product])
-            );
-        });
+        Notification::send(
+            $this->product->followers()->wherePivot(SubscriptionType::Available->value, true)->get(),
+            app()->make(AvailableNotification::class, ['product' => $this->product])
+        );
     }
 }

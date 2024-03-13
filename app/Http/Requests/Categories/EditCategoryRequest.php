@@ -23,7 +23,6 @@ class EditCategoryRequest extends FormRequest
      */
     public function rules(): array
     {
-
         $categoryId = $this->route('category')->id;
 
         return [

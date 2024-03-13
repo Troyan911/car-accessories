@@ -2,8 +2,8 @@
 
 namespace App\Services;
 
-use App\Enums\OrderStatus;
-use App\Enums\Unit;
+use App\Enums\Order\OrderStatus;
+use App\Enums\Order\Unit;
 use App\Models\Order;
 use App\Services\Contract\InvoiceServiceContract;
 use Illuminate\Database\Eloquent\Collection;

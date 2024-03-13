@@ -2,7 +2,7 @@
 
 namespace App\Policies;
 
-use App\Enums\Roles;
+use App\Enums\User\Roles;
 use App\Models\Order;
 use App\Models\User;
 

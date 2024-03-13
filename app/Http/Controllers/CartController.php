@@ -21,7 +21,7 @@ class CartController extends Controller
     public function add(Product $product)
     {
         Cart::instance('cart')
-            ->add($product->id, $product->title, 1, $product->price)
+            ->add($product->id, $product->title, 1, $product->finalPrice)
             ->associate(Product::class);
         notify()->success('Product was added to the cart');
 

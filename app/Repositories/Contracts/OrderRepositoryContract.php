@@ -2,8 +2,8 @@
 
 namespace App\Repositories\Contracts;
 
-use App\Enums\PaymentSystem;
-use App\Enums\TransactionStatus;
+use App\Enums\Order\PaymentSystem;
+use App\Enums\Order\TransactionStatus;
 use App\Models\Order;
 
 interface OrderRepositoryContract

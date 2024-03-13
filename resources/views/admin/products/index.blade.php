@@ -9,12 +9,13 @@
             <th scope="col">Image</th>
             <th scope="col">@sortablelink('title', 'Title')</th>
             <th scope="col">@sortablelink('SKU', 'SKU')</th>
+
             <th scope="col">Categories</th>
             <th scope="col">@sortablelink('price', 'price')</th>
             <th scope="col">@sortablelink('quantity', 'quantity')</th>
 
             <th scope="col">@sortablelink('created_at', 'Created')</th>
-            <th scope="col">@sortablelink('modified_at', 'Modified')</th>
+            <th scope="col">@sortablelink('updated_at', 'Modified')</th>
             <th scope="col">Actions</th>
         </tr>
         </thead>
@@ -26,20 +27,16 @@
                 <td>{{$product->title}}</td>
                 <td>{{$product->SKU}}</td>
 
-{{--                todo categories--}}
-                {{--                <td>--}}
-                {{--                    @if($product->categories->exists())--}}
-                {{--                        {{$product->categories_count}}--}}
-                {{--                <a href="{{route('admin.categories.edit', $category->parent)}}">{{$category->parent->name}}</a>--}}
-                {{--                    @else--}}
-                {{--                        ---}}
-                {{--                    @endif--}}
-                {{--                </td>--}}
+                <td>
+                    @if($product->categories()->exists())
+                        {{$product->categories_count}}
+                    @endif
+                </td>
 
                 <td>{{$product->finalPrice}}</td>
                 <td>{{$product->quantity}}</td>
                 <td>{{$product->created_at}}</td>
-                <td>{{$product->modified_at}}</td>
+                <td>{{$product->updated_at}}</td>
                 <td>
                     <form method="POST" action="{{route("admin.products.destroy", $product)}}">
                         @csrf

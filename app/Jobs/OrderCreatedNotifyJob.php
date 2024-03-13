@@ -2,8 +2,8 @@
 
 namespace App\Jobs;
 
-use App\Enums\JobQueue;
-use App\Enums\Roles;
+use App\Enums\Notification\JobQueue;
+use App\Enums\User\Roles;
 use App\Models\Order;
 use App\Models\User;
 use App\Notifications\AdminCreteOrderNotification;

@@ -1,5 +1,7 @@
 <?php
 
+use App\Events\UserNotify;
+use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,7 +16,8 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('test', function () {
-    \App\Events\UserNotify::dispatch('test message');
+    $user = User::find(4);
+    UserNotify::dispatch($user, 'test message for user '.$user->email);
 });
 
 Route::get('/', App\Http\Controllers\HomeController::class)->name('home');

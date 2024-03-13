@@ -2,12 +2,14 @@
 
 namespace App\Providers;
 
+use App\Repositories\CategoriesRepository;
+use App\Repositories\Contracts\CategoriesRepositoryContract;
 use App\Repositories\Contracts\ImageRepositoryContract;
 use App\Repositories\Contracts\OrderRepositoryContract;
 use App\Repositories\Contracts\ProductsRepositoryContract;
 use App\Repositories\ImageRepository;
 use App\Repositories\OrderRepository;
-use App\Repositories\ProductsRepository;
+use App\Repositories\ProductRepository;
 use App\Services\Contract\FileStorageServiceContract;
 use App\Services\Contract\InvoiceServiceContract;
 use App\Services\Contract\PaypalServiceContract;
@@ -29,7 +31,8 @@ class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->bind(FileStorageServiceContract::class, FileStorageService::class);
-        $this->app->bind(ProductsRepositoryContract::class, ProductsRepository::class);
+        $this->app->bind(ProductsRepositoryContract::class, ProductRepository::class);
+        $this->app->bind(CategoriesRepositoryContract::class, CategoriesRepository::class);
         $this->app->bind(ImageRepositoryContract::class, ImageRepository::class);
         $this->app->bind(PaypalServiceContract::class, PaypalService::class);
         $this->app->bind(OrderRepositoryContract::class, OrderRepository::class);

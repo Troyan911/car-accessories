@@ -2,8 +2,8 @@
 
 namespace App\Notifications;
 
-use App\Enums\NotificationType;
-use App\Enums\OrderStatus;
+use App\Enums\Notification\NotificationType;
+use App\Enums\Order\OrderStatus;
 use App\Models\Order;
 use App\Services\Contract\InvoiceServiceContract;
 use Illuminate\Bus\Queueable;
