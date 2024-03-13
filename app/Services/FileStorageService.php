@@ -18,7 +18,7 @@ class FileStorageService implements Contract\FileStorageServiceContract
         $directory = ! empty($directory) ? $directory.'/' : '';
 
         $filePath = "public/$directory".Str::random().'_'.time().'.'.$file->getClientOriginalExtension();
-        Storage::put($filePath, File::get($file));
+        Storage::disk('s3')->put($filePath, File::get($file));
         Storage::setVisibility($filePath, 'public');
 
         return $filePath;

@@ -12,7 +12,7 @@ class HomeController extends Controller
         $categories = Category::take(10)->get();
         $products = Product::with(['categories'])
             ->orderByDesc('id')
-            ->take(80)
+            ->take(20)
             ->get();
 
         return view('home', compact('products', 'categories'));
