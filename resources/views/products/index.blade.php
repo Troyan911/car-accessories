@@ -6,6 +6,7 @@
             <div class="row row-cols-1 row-cols-sm-3 row-cols-md-4 g-4">
                 @each('products.parts.card', $products, 'product')
             </div>
+            {{$products->links()}}
         </div>
     </div>
 @endsection
