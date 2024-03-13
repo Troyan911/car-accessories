@@ -14,8 +14,7 @@ class CategoriesController extends Controller
 {
     public function __construct()
     {
-        //todo fix
-        //                $this->authorizeResource(Category::class, 'category');
+        $this->authorizeResource(Category::class);
     }
 
     /**
@@ -50,9 +49,10 @@ class CategoriesController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Category $category)
     {
-        return new CategoryResource(Category::find($id));
+//        $this->authorize('view', Category::find($id));
+        return new CategoryResource($category);
     }
 
     /**
@@ -68,8 +68,8 @@ class CategoriesController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id, CategoriesRepositoryContract $repository)
+    public function destroy(Category $category, CategoriesRepositoryContract $repository)
     {
-        return $repository->destroy(Category::find($id));
+        return $repository->destroy($category);
     }
 }

@@ -14,8 +14,7 @@ class ProductsController extends Controller
 {
     public function __construct()
     {
-        //todo fix
-        //        $this->authorizeResource(Product::class, 'product');
+        $this->authorizeResource(Product::class, 'product');
     }
 
     /**
@@ -53,9 +52,9 @@ class ProductsController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Product $product)
     {
-        return new ProductResource(Product::find($id));
+        return new ProductResource($product);
     }
 
     /**
@@ -71,8 +70,8 @@ class ProductsController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id, ProductsRepositoryContract $repository)
+    public function destroy(Product $product, ProductsRepositoryContract $repository)
     {
-        return $repository->destroy(Product::find($id));
+        return $repository->destroy($product);
     }
 }
