@@ -1,5 +1,7 @@
 <?php
 
+use App\Events\UserNotify;
+use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,13 +16,8 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('test', function () {
-    $user = auth()->user();
-    $product = \App\Models\Product::find(10); //where('id', 10)->get();
-    $wished = $user->wishes()->find($product);
-
-    //    dd($wished->pivot);
-    $user->removeFromWish($product, 'price');
-    //    dd($user->wishes()->where('product_id', $product->id)->wherePivot('price', true)->exists());
+    $user = User::find(4);
+    UserNotify::dispatch($user, 'test message for user '.$user->email);
 });
 
 Route::get('/', App\Http\Controllers\HomeController::class)->name('home');

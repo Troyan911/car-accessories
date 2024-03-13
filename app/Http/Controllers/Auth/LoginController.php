@@ -27,6 +27,13 @@ class LoginController extends Controller
      */
     protected $redirectTo = '/';
 
+    //logs()->error($this);
+    //        dd($this);
+
+    //    protected function redirectTo() {
+    //        return
+    //    }
+
     /**
      * Create a new controller instance.
      *

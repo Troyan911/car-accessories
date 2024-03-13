@@ -10,7 +10,7 @@
             <th scope="col">@sortablelink('parent_id', 'Parent')</th>
             <th scope="col">@sortablelink('products_count', '# products')</th>
             <th scope="col">@sortablelink('created_at', 'Created')</th>
-            <th scope="col">@sortablelink('modified_at', 'Modified')</th>
+            <th scope="col">@sortablelink('updated_at', 'Modified')</th>
             <th scope="col">Actions</th>
         </tr>
         </thead>
@@ -29,7 +29,7 @@
                 {{--                <td>{{$category->products->count()}}</td>--}}
                 <td>{{$category->products_count}}</td>
                 <td>{{$category->created_at}}</td>
-                <td>{{$category->modified_at}}</td>
+                <td>{{$category->updated_at}}</td>
                 <td>
                     <form method="POST" action="{{route("admin.categories.destroy", $category)}}">
                         @csrf

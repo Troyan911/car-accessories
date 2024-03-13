@@ -2,8 +2,8 @@
 
 namespace App\Jobs\Products;
 
-use App\Enums\Account\SubscriptionType;
-use App\Enums\JobQueue;
+use App\Enums\Notification\JobQueue;
+use App\Enums\User\SubscriptionType;
 use App\Models\Product;
 use App\Notifications\Product\PriceDownNotification;
 use Illuminate\Bus\Queueable;
@@ -33,7 +33,7 @@ class PriceDownJob implements ShouldQueue
     {
         logs()->info(__CLASS__.': Price update');
 
-        $this->product->followers()->wherePivot(SubscriptionType::Price->value, true)->chunk(3, function (Collection $users){
+        $this->product->followers()->wherePivot(SubscriptionType::Price->value, true)->chunk(3, function (Collection $users) {
             sleep(10);
             Notification::send(
                 $users,

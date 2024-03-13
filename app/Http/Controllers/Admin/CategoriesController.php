@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Categories\CreateCategoryRequest;
 use App\Http\Requests\Categories\EditCategoryRequest;
 use App\Models\Category;
-use Illuminate\Support\Str;
+use App\Repositories\Contracts\CategoriesRepositoryContract;
 
 class CategoriesController extends Controller
 {
@@ -36,15 +36,17 @@ class CategoriesController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(CreateCategoryRequest $request)
+    public function store(CreateCategoryRequest $request, CategoriesRepositoryContract $repository)
     {
-        $data = $request->validated();
-        $data['slug'] = Str::of($data['name'])->slug()->value();
+        if ($item = $repository->create($request)) {
+            notify()->success("Category $item->name was created!");
 
-        Category::create($data);
-        notify()->success("Category '$data[name]' was created!");
+            return redirect()->route('admin.categories.index');
+        } else {
+            notify()->warning("Category wasn't created!");
 
-        return redirect()->route('admin.categories.index');
+            return redirect()->back()->withInput();
+        }
     }
 
     /**
@@ -60,36 +62,29 @@ class CategoriesController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(EditCategoryRequest $request, Category $category)
+    public function update(EditCategoryRequest $request, Category $category, CategoriesRepositoryContract $repository)
     {
-        $data = $request->validated();
-        $data['slug'] = Str::of($data['name'])->slug()->value();
+        if ($repository->update($category, $request)) {
+            notify()->success("Category '$category->name' was updated!");
 
-        if (! $category->updateOrFail($data)) {
+            return redirect()->route('admin.categories.index');
+        } else {
+            notify()->warning("Category '$category->name' wasn't updated!");
+
             return redirect()->back()->withInput();
         }
-        notify()->success("Category '$data[name]' was updated!");
-
-        return redirect()->route('admin.categories.index');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Category $category)
+    public function destroy(Category $category, CategoriesRepositoryContract $repository)
     {
         $this->middleware('permission:'.config('permission.permissions.delete'));
         $name = $category->name;
-
-        if ($category->childs()->exists()) {
-            $category->childs()->update(['parent_id' => null]);
-        }
-
-        //todo repository
-        if (! $category->deleteOrFail()) {
-            return redirect()->back();
-        }
-        notify()->success("Category '$name' was deleted!");
+        $repository->destroy($category)
+            ? notify()->success("Category '$name' was deleted!")
+            : notify()->warning("Category '$name' wasn't deleted!");
 
         return redirect()->route('admin.categories.index');
     }

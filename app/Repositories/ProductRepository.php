@@ -9,13 +9,13 @@ use App\Repositories\Contracts\ImageRepositoryContract;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
-class ProductsRepository implements Contracts\ProductsRepositoryContract
+class ProductRepository implements Contracts\ProductsRepositoryContract
 {
     public function __construct(protected ImageRepositoryContract $imageRepository)
     {
     }
 
-    public function create(CreateProductRequest $request): bool
+    public function create(CreateProductRequest $request): Product|false
     {
         try {
             DB::beginTransaction();
@@ -27,9 +27,9 @@ class ProductsRepository implements Contracts\ProductsRepositoryContract
             $this->setProductData($product, $data);
 
             DB::commit();
-            notify()->success("Product '{$data['attributes']['title']}' was created!");
 
-            return true;
+            //            notify()->success("Product '{$data['attributes']['title']}' was created!");
+            return $product;
         } catch (\Exception $exception) {
             DB::rollBack();
             logs()->warning($exception);
@@ -52,11 +52,27 @@ class ProductsRepository implements Contracts\ProductsRepositoryContract
             $this->setProductData($product, $data);
 
             DB::commit();
-            notify()->success("Product '{$data['attributes']['title']}' was updated!");
 
+            //            notify()->success("Product '{$data['attributes']['title']}' was updated!");
             return true;
         } catch (\Exception $exception) {
             DB::rollBack();
+            logs()->warning($exception);
+
+            return false;
+        }
+    }
+
+    public function destroy(Product $product): bool
+    {
+        try {
+            $product->categories()->detach();
+            $product->followers()->detach();
+
+            $product->deleteOrFail();
+
+            return true;
+        } catch (\Exception $exception) {
             logs()->warning($exception);
 
             return false;

@@ -37,7 +37,7 @@ class AvailableNotification extends Notification
         return (new MailMessage)
             ->line("Hi, $notifiable->fullName")
             ->line("Product which you've added to wishlist ")
-            ->line("\'{$this->product->title}\'")
+            ->line("{$this->product->title}")
             ->line('Has became available for order')
             ->action('Open product', url(route('products.show', $this->product)))
             ->line('Thank you for using our application!');

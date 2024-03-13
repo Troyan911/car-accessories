@@ -23,7 +23,6 @@ class CreateProductRequest extends FormRequest
      */
     public function rules(): array
     {
-
         return [
             'title' => ['required', 'string', 'min:2', 'max:255', 'unique:'.Product::class],
             'description' => ['nullable', 'string'],

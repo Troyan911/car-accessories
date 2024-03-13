@@ -2,8 +2,8 @@
 
 namespace App\Services;
 
-use App\Enums\PaymentSystem;
-use App\Enums\TransactionStatus;
+use App\Enums\Order\PaymentSystem;
+use App\Enums\Order\TransactionStatus;
 use App\Http\Requests\CreateOrderRequest;
 use App\Repositories\Contracts\OrderRepositoryContract;
 use Gloudemans\Shoppingcart\Facades\Cart;
