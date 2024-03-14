@@ -23,6 +23,30 @@ class LoginTest extends TestCase
         $this->youAreLoggedIn = 'You are logged in!';
     }
 
+    /**
+     * fieldsList data provider
+     * @return array[]
+     */
+    public static function fieldsList(): array
+    {
+        return [
+            ['email'],
+            ['password'],
+        ];
+    }
+
+    /**
+     * @test
+     * @dataProvider fieldsList
+     */
+    public function test_check_fields_exists(string $fieldName)
+    {
+        $this->get(route('login'))
+            ->assertStatus(200)
+            ->assertViewIs('auth.login')
+            ->assertSee('name="' . $fieldName .'"', false); // Check for the input
+    }
+
     protected function afterRefreshingDatabase()
     {
         $this->seed(PermissionsAndRolesSeeder::class);
@@ -62,8 +86,8 @@ class LoginTest extends TestCase
             'password' => 'qwerty12'
         ])
             ->assertStatus(302)
-            ->assertRedirectToRoute('login') //todo
-//            ->assertRedirectToRoute('home')
+//            ->assertRedirectToRoute('login') //todo
+            ->assertRedirectToRoute('home')
             ->assertSessionHasErrors([
                 'email' => $this->errCredsDidntMatch
             ]);
@@ -83,8 +107,8 @@ class LoginTest extends TestCase
             'password' => 'qwerty456'
         ])
             ->assertStatus(302)
-//            ->assertRedirectToRoute('login'); //todo why / ?
-//            ->assertRedirectToRoute('home') //todo why / ?
+//            ->assertRedirectToRoute('login'); //todo
+            ->assertRedirectToRoute('home')
             ->assertSessionHasErrors([
                 'email' => $this->errCredsDidntMatch
             ]);

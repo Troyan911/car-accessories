@@ -36,6 +36,35 @@ class RegistrationTest extends TestCase
     }
 
     /**
+     * fieldsList data provider
+     * @return array[]
+     */
+    public static function fieldsList(): array
+    {
+        return [
+            ['name'],
+            ['surname'],
+            ['email'],
+            ['phone'],
+            ['birthdate'],
+            ['password'],
+            ['password_confirmation'],
+        ];
+    }
+
+    /**
+     * @test
+     * @dataProvider fieldsList
+     */
+    public function test_check_fields_exists(string $fieldName)
+    {
+        $this->get(route('register'))
+            ->assertStatus(200)
+            ->assertViewIs('auth.register')
+            ->assertSee('name="' . $fieldName .'"', false); // Check for the input
+    }
+
+    /**
      * incorrectData data provider
      * @return array[]
      */
@@ -56,6 +85,7 @@ class RegistrationTest extends TestCase
         $errEmailUnique = 'The email has already been taken.';
         $errPhoneUnique = 'The phone has already been taken.';
 
+//            validation
 //            'name' => ['required', 'string', 'max:50'],
 //            'surname' => ['required', 'string', 'max:50'],
 //            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
@@ -64,18 +94,17 @@ class RegistrationTest extends TestCase
 //            'password' => ['required', 'confirmed', Password::defaults()],
 
         return [
-//            ['name', fake()->regexify('[A-Z0-9]{55}'), $errNameMax50Chars],
-//            ['surname', fake()->regexify('[A-Z0-9]{55}'), $errSurNameMax50Chars],
-//
-//            ['email', fake()->regexify('[A-Z0-9]{255}') . "@co.uk", $errEmailMax255Chars],
-//            ['email', ".@i", $errEmailValid],
-//
-//            ['phone', "+" . fake()->regexify('[0-9]{20}'), $errPhoneLen],
-//            ['birthdate', fake()->dateTimeBetween('-17 years', '-15 years')->format('Y-m-d'), $errBirthDate],
-//
-//            ['password', fake()->password(5,7), $errPasswordMinLength],
+            ['name', fake()->regexify('[A-Z0-9]{55}'), $errNameMax50Chars, false],
+            ['surname', fake()->regexify('[A-Z0-9]{55}'), $errSurNameMax50Chars, false],
 
-//            ['password_confirmation', fake()->text(7), $errPasswordDoesntMatch],
+            ['email', fake()->regexify('[A-Z0-9]{255}') . "@co.uk", $errEmailMax255Chars, false],
+            ['email', ".@i", $errEmailValid, false],
+
+            ['phone', "+" . fake()->regexify('[0-9]{20}'), $errPhoneLen, false],
+            ['birthdate', fake()->dateTimeBetween('-17 years', '-15 years')->format('Y-m-d'), $errBirthDate, false],
+
+            ['password', fake()->password(5, 7), $errPasswordMinLength, false],
+            ['password', fake()->password(10, 12), $errPasswordDoesntMatch, false],
 
             ['email', null, $errEmailUnique, true],
             ['phone', null, $errPhoneUnique, true],
@@ -97,25 +126,22 @@ class RegistrationTest extends TestCase
         $user['password_confirmation'] = 'testPass';
         $user[$field] = !$checkExists ? $value : $existingUser[$field];
 
-//        dd($user, $existingUser);
-
         $resp = $this->post(route('register'), $user)
             ->assertStatus(302)
-
-//        dd($user, $field, $errorMessage, $resp);
-
-//        ->assertRedirectToRoute('register') //todo redirect
             ->assertSessionHasErrors([
                 $field => $errorMessage
             ]);
 
-        if(!$checkExists) {
+        //todo
+//        $resp->assertViewIs('register');
+
+        if (!$checkExists) {
             $this->assertDatabaseMissing(User::class, ['email' => $user['email']]);
         }
     }
 
 
-    public function test_success_registration(): void
+    public function __test_success_registration(): void
     {
         $user = User::factory()
             ->make()

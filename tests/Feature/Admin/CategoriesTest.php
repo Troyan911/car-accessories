@@ -33,14 +33,35 @@ class CategoriesTest extends TestCase
     protected function afterRefreshingDatabase()
     {
         $this->seed(DatabaseSeeder::class);
-//        $this->seed(UsersSeeder::class);
-//        $this->seed(ModeratorSeeder::class);
-//        $this->seed(AdminSeeder::class);
-//        $this->seed(CategoryProductSeeder::class);
-
-//todo failed 6 tests
-//        $this->withoutExceptionHandling();
     }
+
+    /**
+     * categoryForms data provider
+     * @return array[]
+     */
+    public static function categoryForms(): array
+    {
+        return [
+            ['admin.categories.create', false],
+            ['admin.categories.edit', true],
+        ];
+    }
+
+    /**
+     * @test
+     * @dataProvider categoryForms
+     */
+    public function test_category_form_contain_fields(string $route, bool $needParam)
+    {
+        $this->actingAsRole(Roles::ADMIN);
+
+        $this->get(route($route, $needParam ? Category::factory()->create() : [] ))
+            ->assertStatus(200)
+            ->assertViewIs($route)
+            ->assertSee('name="name"', false) // Check for the input
+            ->assertSee('name="parent_id"', false); // Check for the input
+    }
+
 
     /**
      * Routes data provider
@@ -115,11 +136,11 @@ class CategoriesTest extends TestCase
 //        $category = Category::factory()->create();
         $category = Category::factory()->make();
         $this->actingAsRole(Roles::MODERATOR)
-//            ->post(route('admin.categories.store', $category))
+//            ->post(route('admin.categories.store', $category)) //todo redirect to localhost/
             ->post(route('admin.categories.store'), $category->toArray())
             ->assertStatus(302)
             ->assertRedirectToRoute('admin.categories.index');
-//            ->assertViewIs('admin.categories.index');
+
         $this->assertDatabaseHas(Category::class, ['name' => $category->name]);
     }
 
@@ -133,11 +154,11 @@ class CategoriesTest extends TestCase
             ->post(route('admin.categories.store'), $data)
             ->assertStatus(302)
             ->assertSessionHasErrors([
+                    //todo doesn't work
+//                    'name' => app(CreateCategoryRequest::class)->messages()['name.min'],
                     'name' => (new CreateCategoryRequest)->messages()['name.min'],
                     'parent_id' => 'The selected parent id is invalid.'
                 ]
-            //todo doesn't work
-            //['name' => app(CreateCategoryRequest::class)->messages()['name.min']]
             );
         $this->assertDatabaseMissing(Category::class, $data);
     }
@@ -145,15 +166,16 @@ class CategoriesTest extends TestCase
     public function test_category_update_with_valid_data()
     {
         $category = Category::factory()->create();
-
-        $category->name .= '_new';
         $parent = Category::factory()->create();
+        $category->name .= '_new';
+//        $category->parent_id = $parent->id;
 
-        $this->actingAsRole(Roles::MODERATOR)
+        $this->actingAsRole(Roles::ADMIN)
             ->put(route('admin.categories.update', $category), [
-                'name' => $category->name,
-                'parent_id' => $parent->id
-            ])
+                    'name' => $category->name,
+                    'parent_id' => $parent->id
+                ]
+            )
             ->assertStatus(302)
             ->assertRedirectToRoute('admin.categories.index');
         $this->assertDatabaseHas(Category::class, [
@@ -205,7 +227,7 @@ class CategoriesTest extends TestCase
     public function test_remove_unexisting_category()
     {
         $category = Category::factory()->create();
-        $category->id = 0;
+        $category->id += 100;
         $this->assertDatabaseMissing(Category::class, ['id' => $category->id]);
 
         $this->actingAsRole(Roles::MODERATOR)
