@@ -2,7 +2,6 @@
 
 namespace Tests\Unit;
 
-
 use App\Services\Contract\FileStorageServiceContract;
 use App\Services\FileStorageService;
 use Illuminate\Http\UploadedFile;
@@ -37,7 +36,8 @@ class FileStorageServiceTest extends TestCase
         $this->assertEquals(Storage::getVisibility($filePath), 'public');
     }
 
-    public function test_remove_file() {
+    public function test_remove_file()
+    {
         $filePath = $this->uploadFile();
         $this->assertTrue(Storage::has($filePath));
         $this->service->remove($filePath);
@@ -47,6 +47,7 @@ class FileStorageServiceTest extends TestCase
     protected function uploadFile($fileName = 'image.png', $additionalPath = ''): string
     {
         $file = UploadedFile::fake()->image($fileName);
+
         return $this->service->upload($file, $additionalPath);
     }
 }

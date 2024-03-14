@@ -2,21 +2,17 @@
 
 namespace Tests\Feature\Auth;
 
-use App\Enums\Roles;
-use App\Models\Product;
 use App\Models\User;
 use Database\Seeders\AdminSeeder;
 use Database\Seeders\ModeratorSeeder;
 use Database\Seeders\PermissionsAndRolesSeeder;
 use Database\Seeders\UsersSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class RegistrationTest extends TestCase
 {
     use RefreshDatabase;
-
 
     /**
      * @var array|mixed[]
@@ -37,6 +33,7 @@ class RegistrationTest extends TestCase
 
     /**
      * fieldsList data provider
+     *
      * @return array[]
      */
     public static function fieldsList(): array
@@ -54,6 +51,7 @@ class RegistrationTest extends TestCase
 
     /**
      * @test
+     *
      * @dataProvider fieldsList
      */
     public function test_check_fields_exists(string $fieldName)
@@ -61,11 +59,12 @@ class RegistrationTest extends TestCase
         $this->get(route('register'))
             ->assertStatus(200)
             ->assertViewIs('auth.register')
-            ->assertSee('name="' . $fieldName .'"', false); // Check for the input
+            ->assertSee('name="'.$fieldName.'"', false); // Check for the input
     }
 
     /**
      * incorrectData data provider
+     *
      * @return array[]
      */
     public static function incorrectRegisterData(): array
@@ -85,22 +84,22 @@ class RegistrationTest extends TestCase
         $errEmailUnique = 'The email has already been taken.';
         $errPhoneUnique = 'The phone has already been taken.';
 
-//            validation
-//            'name' => ['required', 'string', 'max:50'],
-//            'surname' => ['required', 'string', 'max:50'],
-//            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-//            'phone' => ['required', 'string', 'max:15', 'unique:'.User::class], //new Phone],
-//            'birthdate' => ['required', 'date', 'before_or_equal:-18 years'],
-//            'password' => ['required', 'confirmed', Password::defaults()],
+        //            validation
+        //            'name' => ['required', 'string', 'max:50'],
+        //            'surname' => ['required', 'string', 'max:50'],
+        //            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+        //            'phone' => ['required', 'string', 'max:15', 'unique:'.User::class], //new Phone],
+        //            'birthdate' => ['required', 'date', 'before_or_equal:-18 years'],
+        //            'password' => ['required', 'confirmed', Password::defaults()],
 
         return [
             ['name', fake()->regexify('[A-Z0-9]{55}'), $errNameMax50Chars, false],
             ['surname', fake()->regexify('[A-Z0-9]{55}'), $errSurNameMax50Chars, false],
 
-            ['email', fake()->regexify('[A-Z0-9]{255}') . "@co.uk", $errEmailMax255Chars, false],
-            ['email', ".@i", $errEmailValid, false],
+            ['email', fake()->regexify('[A-Z0-9]{255}').'@co.uk', $errEmailMax255Chars, false],
+            ['email', '.@i', $errEmailValid, false],
 
-            ['phone', "+" . fake()->regexify('[0-9]{20}'), $errPhoneLen, false],
+            ['phone', '+'.fake()->regexify('[0-9]{20}'), $errPhoneLen, false],
             ['birthdate', fake()->dateTimeBetween('-17 years', '-15 years')->format('Y-m-d'), $errBirthDate, false],
 
             ['password', fake()->password(5, 7), $errPasswordMinLength, false],
@@ -113,9 +112,10 @@ class RegistrationTest extends TestCase
 
     /**
      * @test
+     *
      * @dataProvider incorrectRegisterData
      */
-    public function test_fail_registration(string $field, string|null $value, string $errorMessage, bool $checkExists): void
+    public function test_fail_registration(string $field, ?string $value, string $errorMessage, bool $checkExists): void
     {
         if ($checkExists) {
             $existingUser = app()->make(User::class)->factory()->create()->toArray();
@@ -124,22 +124,21 @@ class RegistrationTest extends TestCase
         $user = User::factory()->make()->toArray();
         $user['password'] = 'testPass';
         $user['password_confirmation'] = 'testPass';
-        $user[$field] = !$checkExists ? $value : $existingUser[$field];
+        $user[$field] = ! $checkExists ? $value : $existingUser[$field];
 
         $resp = $this->post(route('register'), $user)
             ->assertStatus(302)
             ->assertSessionHasErrors([
-                $field => $errorMessage
+                $field => $errorMessage,
             ]);
 
         //todo
-//        $resp->assertViewIs('register');
+        //        $resp->assertViewIs('register');
 
-        if (!$checkExists) {
+        if (! $checkExists) {
             $this->assertDatabaseMissing(User::class, ['email' => $user['email']]);
         }
     }
-
 
     public function __test_success_registration(): void
     {
@@ -165,5 +164,4 @@ class RegistrationTest extends TestCase
             'email' => $user['email'],
         ]);
     }
-
 }

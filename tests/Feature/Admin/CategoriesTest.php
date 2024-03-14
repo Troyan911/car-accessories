@@ -5,12 +5,7 @@ namespace Tests\Feature\Admin;
 use App\Enums\Roles;
 use App\Http\Requests\Categories\CreateCategoryRequest;
 use App\Models\Category;
-use Database\Seeders\AdminSeeder;
-use Database\Seeders\CategoryProductSeeder;
 use Database\Seeders\DatabaseSeeder;
-use Database\Seeders\ModeratorSeeder;
-use Database\Seeders\PermissionsAndRolesSeeder;
-use Database\Seeders\UsersSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -18,9 +13,6 @@ class CategoriesTest extends TestCase
 {
     use RefreshDatabase;
 
-    /**
-     * @return void
-     */
     protected function setUp(): void
     {
         parent::setUp();
@@ -37,6 +29,7 @@ class CategoriesTest extends TestCase
 
     /**
      * categoryForms data provider
+     *
      * @return array[]
      */
     public static function categoryForms(): array
@@ -49,22 +42,23 @@ class CategoriesTest extends TestCase
 
     /**
      * @test
+     *
      * @dataProvider categoryForms
      */
     public function test_category_form_contain_fields(string $route, bool $needParam)
     {
         $this->actingAsRole(Roles::ADMIN);
 
-        $this->get(route($route, $needParam ? Category::factory()->create() : [] ))
+        $this->get(route($route, $needParam ? Category::factory()->create() : []))
             ->assertStatus(200)
             ->assertViewIs($route)
             ->assertSee('name="name"', false) // Check for the input
             ->assertSee('name="parent_id"', false); // Check for the input
     }
 
-
     /**
      * Routes data provider
+     *
      * @return array[]
      */
     public static function categoriesViewsRoutes(): array
@@ -78,6 +72,7 @@ class CategoriesTest extends TestCase
 
     /**
      * @test
+     *
      * @dataProvider categoriesViewsRoutes
      */
     public function test_categories_views_available_for_admin(string $routeName, bool $needParam)
@@ -87,6 +82,7 @@ class CategoriesTest extends TestCase
 
     /**
      * @test
+     *
      * @dataProvider categoriesViewsRoutes
      */
     public function test_categories_views_available_for_moderator(string $routeName, bool $needParam)
@@ -95,9 +91,6 @@ class CategoriesTest extends TestCase
     }
 
     /**
-     * @param Roles $role
-     * @param string $routeName
-     * @param bool $needParam
      * @return void
      */
     private function categoryViewAvailableForRole(Roles $role, string $routeName, bool $needParam)
@@ -116,6 +109,7 @@ class CategoriesTest extends TestCase
 
     /**
      * @test
+     *
      * @dataProvider categoriesViewsRoutes
      */
     public function test_categories_views_not_available_for_customer(string $routeName, bool $needParam)
@@ -129,11 +123,12 @@ class CategoriesTest extends TestCase
 
     /**
      * @test
+     *
      * @return void
      */
     public function test_category_create_with_valid_data()
     {
-//        $category = Category::factory()->create();
+        //        $category = Category::factory()->create();
         $category = Category::factory()->make();
         $this->actingAsRole(Roles::MODERATOR)
 //            ->post(route('admin.categories.store', $category)) //todo redirect to localhost/
@@ -154,11 +149,11 @@ class CategoriesTest extends TestCase
             ->post(route('admin.categories.store'), $data)
             ->assertStatus(302)
             ->assertSessionHasErrors([
-                    //todo doesn't work
-//                    'name' => app(CreateCategoryRequest::class)->messages()['name.min'],
-                    'name' => (new CreateCategoryRequest)->messages()['name.min'],
-                    'parent_id' => 'The selected parent id is invalid.'
-                ]
+                //todo doesn't work
+                //                    'name' => app(CreateCategoryRequest::class)->messages()['name.min'],
+                'name' => (new CreateCategoryRequest)->messages()['name.min'],
+                'parent_id' => 'The selected parent id is invalid.',
+            ]
             );
         $this->assertDatabaseMissing(Category::class, $data);
     }
@@ -168,19 +163,19 @@ class CategoriesTest extends TestCase
         $category = Category::factory()->create();
         $parent = Category::factory()->create();
         $category->name .= '_new';
-//        $category->parent_id = $parent->id;
+        //        $category->parent_id = $parent->id;
 
         $this->actingAsRole(Roles::ADMIN)
             ->put(route('admin.categories.update', $category), [
-                    'name' => $category->name,
-                    'parent_id' => $parent->id
-                ]
+                'name' => $category->name,
+                'parent_id' => $parent->id,
+            ]
             )
             ->assertStatus(302)
             ->assertRedirectToRoute('admin.categories.index');
         $this->assertDatabaseHas(Category::class, [
             'name' => $category->name,
-            'parent_id' => $parent->id
+            'parent_id' => $parent->id,
         ]);
         $category->refresh();
         $this->assertEquals($category->parent_id, $parent->id);
@@ -194,20 +189,20 @@ class CategoriesTest extends TestCase
         $resp = $this->actingAsRole(Roles::MODERATOR)
             ->put(route('admin.categories.update', $category), [
                 'name' => 'n',
-                'parent_id' => 0
+                'parent_id' => 0,
             ]);
 
         $resp->assertStatus(302);
-//        $resp->assertRedirectToRoute('admin.categories.index');
+        //        $resp->assertRedirectToRoute('admin.categories.index');
         $resp->assertSessionHasErrors([
-                'name' => 'The name field must be at least 2 characters.',
-                'parent_id' => 'The selected parent id is invalid.'
-            ]
+            'name' => 'The name field must be at least 2 characters.',
+            'parent_id' => 'The selected parent id is invalid.',
+        ]
         );
 
         $this->assertDatabaseHas(Category::class, [
             'name' => $category->name,
-            'parent_id' => $category->parent_id
+            'parent_id' => $category->parent_id,
         ]);
         $this->assertEquals($category->parent_id, $parent->id);
     }

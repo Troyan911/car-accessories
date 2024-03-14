@@ -15,7 +15,8 @@ abstract class TestCase extends BaseTestCase
         return User::role($role->value)->firstOrFail();
     }
 
-    protected function actingAsRole(Roles $role) {
+    protected function actingAsRole(Roles $role)
+    {
         return $this->actingAs($this->getUser($role));
     }
 }

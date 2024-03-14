@@ -25,6 +25,7 @@ class LoginTest extends TestCase
 
     /**
      * fieldsList data provider
+     *
      * @return array[]
      */
     public static function fieldsList(): array
@@ -37,6 +38,7 @@ class LoginTest extends TestCase
 
     /**
      * @test
+     *
      * @dataProvider fieldsList
      */
     public function test_check_fields_exists(string $fieldName)
@@ -44,7 +46,7 @@ class LoginTest extends TestCase
         $this->get(route('login'))
             ->assertStatus(200)
             ->assertViewIs('auth.login')
-            ->assertSee('name="' . $fieldName .'"', false); // Check for the input
+            ->assertSee('name="'.$fieldName.'"', false); // Check for the input
     }
 
     protected function afterRefreshingDatabase()
@@ -60,7 +62,7 @@ class LoginTest extends TestCase
         $user = User::factory()->create()->syncRoles(Roles::MODERATOR);
         $resp = $this->post(route('login'), [
             'email' => $user['email'],
-            'password' => 'qwerty12'
+            'password' => 'qwerty12',
         ]);
         $resp->assertStatus(302)
             ->assertRedirectToRoute('home');
@@ -69,7 +71,7 @@ class LoginTest extends TestCase
             ->assertDatabaseHas(User::class, ['email' => $user['email']])
             ->get(route('home'));
 
-//        $resp->dump();
+        //        $resp->dump();
 
         $resp->assertStatus(200)
             ->assertViewIs('home')
@@ -83,17 +85,17 @@ class LoginTest extends TestCase
 
         $resp = $this->post(route('login'), [
             'email' => $user['email'],
-            'password' => 'qwerty12'
+            'password' => 'qwerty12',
         ])
             ->assertStatus(302)
 //            ->assertRedirectToRoute('login') //todo
             ->assertRedirectToRoute('home')
             ->assertSessionHasErrors([
-                'email' => $this->errCredsDidntMatch
+                'email' => $this->errCredsDidntMatch,
             ]);
 
-//        $resp->dump();
-//        dd($resp);
+        //        $resp->dump();
+        //        dd($resp);
 
         $this->assertDatabaseMissing(User::class, ['email' => $user['email']]);
     }
@@ -104,21 +106,21 @@ class LoginTest extends TestCase
 
         $resp = $this->post(route('login'), [
             'email' => $user['email'],
-            'password' => 'qwerty456'
+            'password' => 'qwerty456',
         ])
             ->assertStatus(302)
 //            ->assertRedirectToRoute('login'); //todo
             ->assertRedirectToRoute('home')
             ->assertSessionHasErrors([
-                'email' => $this->errCredsDidntMatch
+                'email' => $this->errCredsDidntMatch,
             ]);
         $this->assertDatabaseHas(User::class, ['email' => $user['email']]);
-
 
     }
 
     /**
      * userRoles data provider
+     *
      * @return array[]
      */
     public static function userRoles(): array
@@ -132,6 +134,7 @@ class LoginTest extends TestCase
 
     /**
      * @test
+     *
      * @dataProvider userRoles
      */
     public function test_admin_available_for_roles(Roles $role, bool $isAvailable)
@@ -140,6 +143,6 @@ class LoginTest extends TestCase
             ->get(route('admin.dashboard'))
             ->assertStatus($isAvailable ? 200 : 403);
 
-        !$isAvailable ?? $resp->assertViewIs('admin.dashboard');
+        ! $isAvailable ?? $resp->assertViewIs('admin.dashboard');
     }
 }

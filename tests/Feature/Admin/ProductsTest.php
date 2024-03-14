@@ -16,7 +16,6 @@ use Tests\TestCase;
 
 class ProductsTest extends TestCase
 {
-
     use RefreshDatabase;
 
     protected function setUp(): void
@@ -43,13 +42,14 @@ class ProductsTest extends TestCase
 
     /**
      * @test
+     *
      * @dataProvider productForms
      */
     public function test_product_form_contain_fields(string $route, bool $needParam)
     {
         $this->actingAsRole(Roles::ADMIN);
 
-        $this->get(route($route, $needParam ? Product::factory()->create() : [] ))
+        $this->get(route($route, $needParam ? Product::factory()->create() : []))
             ->assertStatus(200)
             ->assertViewIs($route)
             ->assertSee('name="title"', false) // Check for the input
@@ -64,6 +64,7 @@ class ProductsTest extends TestCase
 
     /**
      * Routes data provider
+     *
      * @return array[]
      */
     public static function productsViewsRoutes(): array
@@ -77,6 +78,7 @@ class ProductsTest extends TestCase
 
     /**
      * @test
+     *
      * @dataProvider productsViewsRoutes
      */
     public function test_products_views_available_for_admin(string $routeName, bool $needParam)
@@ -86,6 +88,7 @@ class ProductsTest extends TestCase
 
     /**
      * @test
+     *
      * @dataProvider productsViewsRoutes
      */
     public function test_products_views_available_for_moderator(string $routeName, bool $needParam)
@@ -94,9 +97,6 @@ class ProductsTest extends TestCase
     }
 
     /**
-     * @param Roles $role
-     * @param string $routeName
-     * @param bool $needParam
      * @return void
      */
     private function productsViewAvailableForRole(Roles $role, string $routeName, bool $needParam)
@@ -119,6 +119,7 @@ class ProductsTest extends TestCase
 
     /**
      * @test
+     *
      * @dataProvider productsViewsRoutes
      */
     public function test_products_views_not_available_for_customer(string $routeName, bool $needParam)
@@ -153,7 +154,7 @@ class ProductsTest extends TestCase
 
         $this->assertDatabaseHas(Product::class, [
             'title' => $data['title'],
-            'thumbnail' => 'image_uploaded.png'
+            'thumbnail' => 'image_uploaded.png',
         ]);
     }
 
@@ -171,11 +172,11 @@ class ProductsTest extends TestCase
 //            ->assertRedirectToRoute('admin.products.index') //todo
             ->assertRedirectToRoute('home')
             ->assertSessionHasErrors([
-                "title" => "The title field must be at least 2 characters."
+                'title' => 'The title field must be at least 2 characters.',
             ]);
 
         $this->assertDatabaseMissing(Product::class, [
-            'title' => $data['title']
+            'title' => $data['title'],
         ]);
     }
 
@@ -222,7 +223,7 @@ class ProductsTest extends TestCase
             ->assertStatus(302)
             ->assertRedirectToRoute('home')
             ->assertSessionHasErrors([
-                "title" => "The title field must be at least 2 characters."
+                'title' => 'The title field must be at least 2 characters.',
             ]);
 
         $this->assertDatabaseMissing(Product::class, [
