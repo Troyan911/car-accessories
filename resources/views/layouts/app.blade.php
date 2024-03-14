@@ -22,7 +22,9 @@
 <body>
     <div id="app">
         @include('navs.main')
-
+        @auth()
+        <i hidden="">You are logged in!</i>
+        @endauth
         <main class="py-4">
             @yield('content')
         </main>

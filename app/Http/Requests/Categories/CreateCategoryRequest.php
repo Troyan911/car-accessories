@@ -18,7 +18,7 @@ class CreateCategoryRequest extends FormRequest
     public function messages()
     {
         return [
-            'name:min' => '2',
+            'name.min' => 'Should be more than 1 symbol',
         ];
     }
 

@@ -13,7 +13,7 @@ class UsersSeeder extends Seeder
      */
     public function run(): void
     {
-        DB::table('users')->truncate();
+        DB::table('users')->delete();
         User::factory(5)->create();
     }
 }
