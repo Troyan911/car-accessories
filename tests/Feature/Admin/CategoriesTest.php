@@ -35,7 +35,7 @@ class CategoriesTest extends TestCase
     public static function categoryForms(): array
     {
         return [
-            //            ['admin.categories.create', false],
+            ['admin.categories.create', false],
             ['admin.categories.edit', true],
         ];
     }
