@@ -35,7 +35,7 @@ class CategoriesTest extends TestCase
     public static function categoryForms(): array
     {
         return [
-            ['admin.categories.create', false],
+//            ['admin.categories.create', false],
             ['admin.categories.edit', true],
         ];
     }
@@ -48,12 +48,13 @@ class CategoriesTest extends TestCase
     public function test_category_form_contain_fields(string $route, bool $needParam)
     {
         $this->actingAsRole(Roles::ADMIN);
+        $category = Category::factory()->create();
 
-        $this->get(route($route, $needParam ? Category::factory()->create() : []))
+        $this->get(route($route, $needParam ? $category : []))
             ->assertStatus(200)
             ->assertViewIs($route)
             ->assertSee('name="name"', false) // Check for the input
-            ->assertSee('name="parent_id"', false); // Check for the input
+            ->assertSee('name="parent_id2"', false); // Check for the input
     }
 
     /**

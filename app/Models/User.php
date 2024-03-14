@@ -59,7 +59,7 @@ use Spatie\Permission\Traits\HasRoles;
  */
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, HasRoles, Notifiable, \Illuminate\Auth\Authenticatable;
+    use HasApiTokens, HasFactory, HasRoles, \Illuminate\Auth\Authenticatable, Notifiable;
 
     /**
      * The attributes that are mass assignable.
